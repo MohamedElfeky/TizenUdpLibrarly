@@ -2,12 +2,9 @@ Welcome to TizenUdpLibrarly!
 ===================
 
 
-TizenUDPLibrary
+TizenUDPLibrary란
 ----------
 
-
-Documents
--------------
 
 Tizen UDP Library 는 Tizen 과 Windows의 신뢰성있는 p2p 통신을 지원하는 라이브러리 입니다. 중계 서버를 통해 통신하기 때문에 각자의 ID만 가지고 p2p 통신을 할 수 있습니다.
 
