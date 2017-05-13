@@ -11,6 +11,7 @@ int main(){
     udp_simple_socket* socket = new udp_simple_socket("127.0.0.1",2322);
     std::cout<<socket->get_port()<<socket->get_addr()<<std::endl;
     socket->listen();
+    sleep(10);
     // socket->recv();
     return 0;
 }
@@ -123,7 +124,11 @@ void *  udp_simple_socket::startRecv(void * This)
     ((udp_simple_socket *)This)->recv();
     return NULL;
 }
-
+void *  udp_simple_socket::startSend(void * This)
+{
+    ((udp_simple_socket *)This)->send();
+    return NULL;
+}
 
 void  udp_simple_socket::recv()const
 {
@@ -140,18 +145,21 @@ void  udp_simple_socket::recv()const
         //try to receive some data, this is a blocking call
         if ((recv_len = recvfrom(s, buf, 1024, 0, (struct sockaddr *) &si_other, (socklen_t*)&slen)) == -1)
         {
-            printf("recvfrom()");
+            printf("recvfrom fail()");
         }
         
         //print details of the client/peer and the data received
         printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
         printf("Data: %s\n" , buf);
         
-        //now reply the client with the same data
-        if (sendto(s, buf, recv_len, 0, (struct sockaddr*) &si_other, slen) == -1)
-        {
-            printf("sendto()");
-        }
     }
     return;
+}
+void udp_simple_socket::send(string message)const
+{
+    
+    if (sendto(f_socket, message.c_str(), message.length(), 0, (struct sockaddr*) &si_other, slen) == -1)
+    {
+        printf("sendto fail()");
+    }
 }
