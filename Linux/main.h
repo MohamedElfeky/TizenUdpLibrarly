@@ -15,17 +15,23 @@ public:
     std::string         get_addr() const;
 
     bool                listen() const;
-    int                 sendSync(const char *msg, size_t size);
+    bool                sendSync(std::string) const;
     // int                 sendAsync(const char *msg, size_t size);
 
-    void                recv() const;//for문 돌면서 listen
-    void                send(string message) const;//send 하기
+    void                recv();//for문 돌면서 listen
+    void                send(std::string * message) const;//send 하기
 
 private:
     int                 f_socket;
     int                 f_port;
     std::string         f_addr;
     struct addrinfo *   f_addrinfo;
+    struct sockaddr_in  si_other;
+    int                 slen;
     static void *       startRecv(void * This);
-    static void *       startSend(void * This);
+    static void *       startSend(void * args);
+    struct two_arg_struct {
+        void * arg1;
+        void * arg2;
+    };
 };

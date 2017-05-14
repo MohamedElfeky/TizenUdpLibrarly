@@ -40,7 +40,6 @@ udp_simple_socket::udp_simple_socket(const std::string& addr, int port)
         std::cout<<"addrinfo fail";
     }
     struct sockaddr_in my_addr;
-
     memset(&my_addr, 0, sizeof(my_addr));
     my_addr.sin_family      = AF_INET;
     my_addr.sin_port        = htons(port);
@@ -101,7 +100,6 @@ bool udp_simple_socket::listen() const
 {
     pthread_t p_thread;
     int thr_id;
-    int status;
     int a = 100;
 
     printf("Before Thread\n"); 
@@ -115,7 +113,30 @@ bool udp_simple_socket::listen() const
     // 식별번호 p_thread 를 가지는 쓰레드를 detach 
     // 시켜준다.
     pthread_detach(p_thread);
-    pause();
+    // pause();
+    return true;
+}
+bool udp_simple_socket::sendSync(std::string message) const  
+{
+    pthread_t p_thread;
+    int thr_id;
+    int status;
+    int a = 100;
+    struct two_arg_struct socket_and_message;
+    socket_and_message.arg1 = (void *)this;
+    socket_and_message.arg2 = (void *)&message;
+    printf("Before Thread\n"); 
+    thr_id = pthread_create(&p_thread, NULL, udp_simple_socket::startSend, (void *)&socket_and_message);
+    if (thr_id < 0)
+    {
+        perror("thread create error : ");
+        exit(0);
+    }
+
+    // 식별번호 p_thread 를 가지는 쓰레드를 detach 
+    // 시켜준다.
+    pthread_join(p_thread,(void **)&status);
+    // pause();
     return true;
 }
 void *  udp_simple_socket::startRecv(void * This)
@@ -123,19 +144,19 @@ void *  udp_simple_socket::startRecv(void * This)
     ((udp_simple_socket *)This)->recv();
     return NULL;
 }
-void *  udp_simple_socket::startSend(void * This)
+void *  udp_simple_socket::startSend(void * args)
 {
-    ((udp_simple_socket *)This)->send();
+    struct udp_simple_socket::two_arg_struct * temp = (struct udp_simple_socket::two_arg_struct * )args;
+    ((udp_simple_socket *)temp->arg1)->send((std::string *)temp->arg2);
     return NULL;
 }
 
-void  udp_simple_socket::recv()const
+void  udp_simple_socket::recv()
 {
     char buf[1024];
     int  recv_len;
-    struct sockaddr_in si_other;
     int s = f_socket;
-    int slen = sizeof(si_other); 
+    slen = sizeof(si_other); 
      while(1)
     {
         printf("Waiting for data...");
@@ -150,14 +171,14 @@ void  udp_simple_socket::recv()const
         //print details of the client/peer and the data received
         printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
         printf("Data: %s\n" , buf);
-        
+        send(&temp_message);
     }
     return;
 }
-void udp_simple_socket::send(string message)const
+void udp_simple_socket::send(std::string * message)const
 {
     
-    if (sendto(f_socket, message.c_str(), message.length(), 0, (struct sockaddr*) &si_other, slen) == -1)
+    if (sendto(f_socket, message->c_str(), message->length(), 0, (struct sockaddr*) &si_other, slen) == -1)
     {
         printf("sendto fail()");
     }
