@@ -8,10 +8,10 @@
 
 int main(){
     udp_simple_socket* socket = new udp_simple_socket("127.0.0.1",2322);
-    std::cout<<socket->get_port()<<socket->get_addr()<<std::endl;
     socket->listen();
-    sleep(10);
-    // socket->recv();
+    while(1){
+        sleep(1);
+    }
     return 0;
 }
 udp_simple_socket::udp_simple_socket(const std::string& addr, int port)
@@ -30,14 +30,14 @@ udp_simple_socket::udp_simple_socket(const std::string& addr, int port)
     int r(getaddrinfo(addr.c_str(), decimal_port, &hints, &f_addrinfo));
     if(r != 0 || f_addrinfo == NULL)
     {
-        std::cout<<"addrinfo fail";
+        perror("addrinfo fail");
     }
 
     f_socket = socket(f_addrinfo->ai_family, SOCK_DGRAM | SOCK_CLOEXEC, IPPROTO_UDP);
     if(f_socket == -1)
     {
         freeaddrinfo(f_addrinfo);
-        std::cout<<"addrinfo fail";
+        perror("addrinfo fail");
     }
     struct sockaddr_in my_addr;
     memset(&my_addr, 0, sizeof(my_addr));
@@ -47,7 +47,7 @@ udp_simple_socket::udp_simple_socket(const std::string& addr, int port)
 
     if( bind(f_socket, (const struct sockaddr *)&my_addr,sizeof(my_addr)) == -1)
     {
-        std::cout<<"bind fail";
+        perror("bind fail");
     }
         
 }
@@ -96,14 +96,13 @@ std::string udp_simple_socket::get_addr() const
     return f_addr;
 }
 
-bool udp_simple_socket::listen() const  
+bool udp_simple_socket::listen()  
 {
-    pthread_t p_thread;
     int thr_id;
     int a = 100;
 
     printf("Before Thread\n"); 
-    thr_id = pthread_create(&p_thread, NULL, udp_simple_socket::startRecv, (void *)this);
+    thr_id = pthread_create(&listen_thread, NULL, udp_simple_socket::startRecv, (void *)this);
     if (thr_id < 0)
     {
         perror("thread create error : ");
@@ -112,8 +111,8 @@ bool udp_simple_socket::listen() const
 
     // 식별번호 p_thread 를 가지는 쓰레드를 detach 
     // 시켜준다.
-    pthread_detach(p_thread);
-    // pause();
+    // pthread_detach(listen_thread);
+    pause();
     return true;
 }
 bool udp_simple_socket::sendSync(std::string message) const  
@@ -129,6 +128,7 @@ bool udp_simple_socket::sendSync(std::string message) const
     thr_id = pthread_create(&p_thread, NULL, udp_simple_socket::startSend, (void *)&socket_and_message);
     if (thr_id < 0)
     {
+        printf("haha");
         perror("thread create error : ");
         exit(0);
     }
@@ -165,13 +165,14 @@ void  udp_simple_socket::recv()
         //try to receive some data, this is a blocking call
         if ((recv_len = recvfrom(s, buf, 1024, 0, (struct sockaddr *) &si_other, (socklen_t*)&slen)) == -1)
         {
-            printf("recvfrom fail()");
+            perror("recvfrom fail()");
         }
         
         //print details of the client/peer and the data received
         printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
         printf("Data: %s\n" , buf);
-        send(&temp_message);
+        std::string temp_message = std::string(buf);
+        udp_simple_socket::sendSync(temp_message);
     }
     return;
 }
@@ -180,6 +181,7 @@ void udp_simple_socket::send(std::string * message)const
     
     if (sendto(f_socket, message->c_str(), message->length(), 0, (struct sockaddr*) &si_other, slen) == -1)
     {
-        printf("sendto fail()");
+        perror("sendto fail()");
     }
+    sleep(10);
 }
