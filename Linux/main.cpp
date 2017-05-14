@@ -7,7 +7,6 @@
 #include <stdlib.h>
 
 int main(){
-    std::cout<< "Hello, world!\n";
     udp_simple_socket* socket = new udp_simple_socket("127.0.0.1",2322);
     std::cout<<socket->get_port()<<socket->get_addr()<<std::endl;
     socket->listen();
