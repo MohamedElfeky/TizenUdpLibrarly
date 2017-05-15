@@ -4,17 +4,11 @@
             "name": "SSW_NOTEBOOK_Linux",
             "includePath": [
                 "${workspaceRoot}",
-                "/usr/include",
-                "/usr/local/include",
-                "C:/Users/dhtpr/AppData/Local/lxss/rootfs/usr/lib/gcc/x86_64-linux-gnu/4.8/include",
                 "C:/Users/dhtpr/AppData/Local/lxss/rootfs/usr/include"
             ],
             "defines": [],
             "browse": {
                 "path": [
-                    "/usr/include",
-                    "/usr/local/include",
-                    "C:/Users/dhtpr/AppData/Local/lxss/rootfs/usr/lib/gcc/x86_64-linux-gnu/4.8/include",
                     "C:/Users/dhtpr/AppData/Local/lxss/rootfs/usr/include"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
@@ -29,9 +23,7 @@
                 "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/um",
                 "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/ucrt",
                 "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/shared",
-                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/winrt",
-                "C:/Users/dhtpr/AppData/Local/lxss/rootfs/usr/lib/gcc/x86_64-linux-gnu/4.8/include",
-                "C:/Users/dhtpr/AppData/Local/lxss/rootfs/usr/include"
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/winrt"
             ],
             "defines": [
                 "_DEBUG",
@@ -43,9 +35,7 @@
                     "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/um",
                     "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/ucrt",
                     "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/shared",
-                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/winrt",
-                    "C:/Users/dhtpr/AppData/Local/lxss/rootfs/usr/lib/gcc/x86_64-linux-gnu/4.8/include",
-                    "C:/Users/dhtpr/AppData/Local/lxss/rootfs/usr/include"
+                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/winrt"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
