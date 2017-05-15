@@ -14,7 +14,7 @@ public:
     int                 get_port() const;
     std::string         get_addr() const;
 
-    bool                listen() const;
+    bool                listen();
     bool                sendSync(std::string) const;
     // int                 sendAsync(const char *msg, size_t size);
 
@@ -30,6 +30,7 @@ private:
     int                 slen;
     static void *       startRecv(void * This);
     static void *       startSend(void * args);
+    pthread_t           listen_thread;
     struct two_arg_struct {
         void * arg1;
         void * arg2;
