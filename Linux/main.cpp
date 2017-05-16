@@ -14,7 +14,6 @@ int my_listen_callback(struct sockaddr_in sender, const std::string& msg){
         sock_set=true;
     }
     else{
-        
         udp_simple_socket::getInstance()->sendSync(msg);
     }
 }

@@ -8,6 +8,7 @@ def test():
     print(s)
     print(addr)
 def send_to_addr():
+    socket.gethostname()
     csock1 = socket(AF_INET, SOCK_DGRAM)
     csock1.bind(('localhost', 0))
     print(csock1.getsockname())
