@@ -32,6 +32,7 @@ int enroll_user(struct sockaddr_in&sender, stringstream & ss){
 
                         // 해당 아이디가 리스트에 있는지 검사
                         vector<struct user>::iterator vi;
+                        struct user to_connect;
                         for(vi = user_vector.begin();vi!=user_vector.end();vi++){
                             bool id_cmp = vi->id.compare(id)==0;
                             bool token_cmp = vi->token.compare(token)==0;
