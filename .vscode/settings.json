@@ -1,21 +1,5 @@
-
 {
     "files.associations": {
-        "xstring": "cpp",
-        "iosfwd": "cpp",
-        "xlocale": "cpp",
-        "system_error": "cpp",
-        "cmath": "cpp",
-        "cstddef": "cpp",
-        "cstdint": "cpp",
-        "cstdio": "cpp",
-        "cstdlib": "cpp",
-        "cstring": "cpp",
-        "cwchar": "cpp",
-        "exception": "cpp",
-        "initializer_list": "cpp",
-        "ios": "cpp",
-        "iostream": "cpp",
         "istream": "cpp",
         "limits": "cpp",
         "new": "cpp",
