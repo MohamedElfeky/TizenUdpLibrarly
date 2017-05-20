@@ -47,5 +47,6 @@ public:
     void                send(std::string * message) const;//send 하기
     int                 bind_port(int port);
     int                 set_listen_callback_func(udp_listen_callback listen_callback);
-
+    static int          check_address(const std::string& usr_ip,const std::string& port_string);
+     
 };

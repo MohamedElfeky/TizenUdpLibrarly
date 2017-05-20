@@ -47,6 +47,8 @@
         "sstream": "cpp",
         "cfenv": "cpp",
         "cinttypes": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "vector": "cpp",
+        "xmemory": "cpp"
     }
 }

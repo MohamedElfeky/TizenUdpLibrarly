@@ -33,4 +33,3 @@ def enroll(my_str):
     temp_str += str(csock1.getsockname()[1])
     csock1.sendto(temp_str.encode('utf-8'), ('127.0.0.1',2322))
     print(temp_str)
-    send_message(temp_str)

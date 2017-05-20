@@ -1,15 +1,15 @@
 {
     "configurations": [
         {
-            "name": "SSW_NOTEBOOK_Linux",
+            "name": "SSW_Desktop_Linux",
             "includePath": [
                 "${workspaceRoot}",
-                "C:/Users/dhtpr/AppData/Local/lxss/rootfs/usr/include"
+                "C:/Users/sangwon0001/AppData/Local/lxss/rootfs/usr/include"
             ],
             "defines": [],
             "browse": {
                 "path": [
-                    "C:/Users/dhtpr/AppData/Local/lxss/rootfs/usr/include"
+                    "C:/Users/sangwon0001/AppData/Local/lxss/rootfs/usr/include"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
@@ -24,6 +24,7 @@
                 "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/ucrt",
                 "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/shared",
                 "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/winrt"
+               
             ],
             "defines": [
                 "_DEBUG",

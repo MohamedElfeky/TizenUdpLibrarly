@@ -16,15 +16,6 @@ struct user {
 
 vector<struct user> user_vector;
 
-int check_address(const string& usr_ip,const string& port_string){
-    int port = atoi(port_string.c_str());
-    cout<<"port is "<< port <<endl;
-    if(port==0) return 0;
-    struct sockaddr_in sa;  
-    int result = inet_pton(AF_INET, usr_ip.c_str(), &(sa.sin_addr));
-    return result !=0;
-}
-
 int enroll_user(struct sockaddr_in&sender, stringstream & ss){
     string id,local_ip,local_port;
     bool temp = getline(ss,id,'|');
@@ -33,8 +24,9 @@ int enroll_user(struct sockaddr_in&sender, stringstream & ss){
         if(temp){
             temp = getline(ss,local_port,'|');
             if(temp){
-                if(check_address(local_ip,local_port)){
+                if(udp_simple_socket::check_address(local_ip,local_port)){
                     cout<< "ip success"<<endl;
+                    
                 }else{
                     cout<< "ip fail"<<endl;
                 }
