@@ -48,6 +48,8 @@ int enroll_user(struct sockaddr_in&sender, stringstream & ss){
                                 if(token_cmp){
                                     //TODO 현재 연결된 애가 2명이면 reject, 1명이면 연결해주기
                                     cout<<"천천히합시다..."<<endl;
+                                    udp_simple_socket::getInstance()->sendSync(sender,"connected");
+                                    udp_simple_socket::getInstance()->sendSync(vi->global,"connected");
                                 }
                             }
                         }

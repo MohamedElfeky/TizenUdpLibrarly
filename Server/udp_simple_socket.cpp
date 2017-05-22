@@ -162,10 +162,10 @@ void  udp_simple_socket::recv()
 }
 void udp_simple_socket::send(std::string * message)const
 {
-    
     if (sendto(f_socket, message->c_str(), message->length(), 0, (struct sockaddr*) &si_other, slen) == -1)
     {
         perror("sendto fail()");
+
     }
 }
 int udp_simple_socket::bind_port(int port)
