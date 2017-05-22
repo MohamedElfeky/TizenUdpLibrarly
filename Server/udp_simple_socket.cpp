@@ -150,6 +150,7 @@ void  udp_simple_socket::recv()
         
         //print details of the client/peer and the data received
         printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
+
         printf("Data: %s\n" , buf);
         std::string temp_message = std::string(buf);
         if(m_listen_callback ==NULL){
