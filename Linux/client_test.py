@@ -30,8 +30,8 @@ def enroll(token,id):
     temp_str = "enroll|"+token+'|'+id+'|'+get_lan_ip()+'|'
     csock1 = socket(AF_INET,SOCK_DGRAM)
     csock1.bind(('', 0))
-    temp_str += str(csock1.getsockname()[1])
-    csock1.sendto(temp_str.encode('utf-8'), ('192.168.0.109',23272))
+    temp_str += str(csock1.getsockname()[1])+'|'
+    csock1.sendto(temp_str.encode('utf-8'), ('165.194.17.3',23272))
     print(temp_str)
     
 def enroll_test():
@@ -42,3 +42,14 @@ def enroll_test():
     enroll("C",'4')
     enroll("C",'5')
     enroll("C",'6')
+    
+def enrollandlisten(token,id):
+    temp_str = "enroll|"+token+'|'+id+'|'+get_lan_ip()+'|'
+    csock1 = socket(AF_INET,SOCK_DGRAM)
+    csock1.bind(('', 0))
+    temp_str += str(csock1.getsockname()[1])+'|'
+    csock1.sendto(temp_str.encode('utf-8'), ('165.194.17.3',23272))
+    print(temp_str)
+    s, addr = csock1.recvfrom(1024)
+    print(s)
+    print(addr)
