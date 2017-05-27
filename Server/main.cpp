@@ -20,21 +20,21 @@ vector<struct user> user_vector;
 int connect_two_user(struct user&user_A,struct user&user_B){//두 유저한테 연결정보 갱신 알려줌
     stringstream to_stream_A,to_stream_B;
     string connect_string("connect");
-    to_stream_A<<connect_string
-        <<'|'<<inet_ntoa(user_A.global.sin_addr)
-        <<'|'<<ntohs(user_A.global.sin_port)
-        <<'|'<<inet_ntoa(user_B.global.sin_addr)
-        <<'|'<<ntohs(user_B.global.sin_port)
-        <<'|'<<inet_ntoa(user_B.local.sin_addr)
-        <<'|'<<ntohs(user_B.local.sin_port)<<'|';
+    to_stream_A <<  connect_string;
+    to_stream_A <<'|'<<inet_ntoa(user_A.global.sin_addr);
+    to_stream_A <<'|'<<ntohs(user_A.global.sin_port);
+    to_stream_A <<'|'<<inet_ntoa(user_B.global.sin_addr);
+    to_stream_A <<'|'<<ntohs(user_B.global.sin_port);
+    to_stream_A <<'|'<<inet_ntoa(user_B.local.sin_addr);
+    to_stream_A <<'|'<<ntohs(user_B.local.sin_port)<<'|';
     string to_user_A(to_stream_A.str());
-    to_stream_B<<connect_string
-        <<'|'<<inet_ntoa(user_B.global.sin_addr)
-        <<'|'<<ntohs(user_B.global.sin_port)
-        <<'|'<<inet_ntoa(user_A.global.sin_addr)
-        <<'|'<<ntohs(user_A.global.sin_port)
-        <<'|'<<inet_ntoa(user_A.local.sin_addr)
-        <<'|'<<ntohs(user_A.local.sin_port)<<'|';
+    to_stream_B<<connect_string<<'|';
+    to_stream_B<<inet_ntoa(user_B.global.sin_addr);
+    to_stream_B<<'|'<<ntohs(user_B.global.sin_port);
+    to_stream_B<<'|'<<inet_ntoa(user_A.global.sin_addr);
+    to_stream_B<<'|'<<ntohs(user_A.global.sin_port);
+    to_stream_B<<'|'<<inet_ntoa(user_A.local.sin_addr);
+    to_stream_B<<'|'<<ntohs(user_A.local.sin_port)<<'|';
     string to_user_B(to_stream_B.str());
     cout<<to_user_A<<endl<<to_user_B<<endl;
     udp_simple_socket::getInstance()->sendSync(user_A.global,to_user_A);
@@ -71,6 +71,7 @@ int enroll_user(struct sockaddr_in& sender, stringstream & ss){
                                         vi = user_vector.erase(vi); //현재 아이피 지우기
                                         to_refresh = true;
                                         continue;
+                                    }else{
                                     }
                                 }else{
                                     //TODO 연결 해제하고 새로운 토큰에 연결하기
@@ -119,6 +120,7 @@ int enroll_user(struct sockaddr_in& sender, stringstream & ss){
 }
 
 int my_listen_callback(struct sockaddr_in sender, const std::string& msg){
+    udp_simple_socket::getInstance()->sendSync(sender,"hi");
     stringstream ss(msg);
     string s;
     bool temp = getline(ss,s,'|');
