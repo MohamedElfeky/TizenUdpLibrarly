@@ -170,17 +170,17 @@ void udp_simple_socket::send(std::string * message)const
 }
 int udp_simple_socket::bind_port(int port)
 {
-    f_port = port;
-    struct sockaddr_in my_addr;
-    memset(&my_addr, 0, sizeof(my_addr));
-    my_addr.sin_family      = AF_INET;
-    my_addr.sin_port        = htons(port);
-    my_addr.sin_addr.s_addr = INADDR_ANY;
+        f_port = port;
+        struct sockaddr_in my_addr;
+        memset(&my_addr, 0, sizeof(my_addr));
+        my_addr.sin_family      = AF_INET;
+        my_addr.sin_port        = htons(port);
+        my_addr.sin_addr.s_addr = INADDR_ANY;
 
-    if( bind(f_socket, (const struct sockaddr *)&my_addr,sizeof(my_addr)) == -1)
-    {
-        perror("bind fail");
-    }
+        if( bind(f_socket, (const struct sockaddr *)&my_addr,sizeof(my_addr)) == -1)
+        {
+            perror("bind fail");
+        }
 }
 int udp_simple_socket::set_listen_callback_func(udp_listen_callback callback){
     m_listen_callback = callback;
