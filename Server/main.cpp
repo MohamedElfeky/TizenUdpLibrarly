@@ -19,7 +19,7 @@ vector<struct user> user_vector;
 
 int connect_two_user(struct user&user_A,struct user&user_B){//두 유저한테 연결정보 갱신 알려줌
     stringstream to_stream_A,to_stream_B;
-    string connect_string("connect");
+    string connect_string("c");
     to_stream_A <<  connect_string;
     to_stream_A <<'|'<<inet_ntoa(user_A.global.sin_addr);
     to_stream_A <<'|'<<ntohs(user_A.global.sin_port);
@@ -125,7 +125,7 @@ int my_listen_callback(struct sockaddr_in sender, const std::string& msg){
     string s;
     bool temp = getline(ss,s,'|');
     if(temp){
-        if(s.compare("enroll")==0){
+        if(s.compare("e")==0){
             cout << "enroll part" << endl;
             enroll_user(sender,ss);
         }
