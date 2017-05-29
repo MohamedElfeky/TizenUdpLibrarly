@@ -80,8 +80,15 @@ void UdpLibrary::checkData(QString data){
     qDebug(data.toUtf8());
     message = data.split("|");      // for example, message is "hello|world|"
     qDebug() << message.count();    // count = 3, message[0] = "hello", message[1] = "world" ,message[2] = ""
-    for(int index = 0; index < message.count(); index++){
-       qDebug() << message[index];
+
+    if(!message.isEmpty()){
+        if(message[0] == "c" && message.count() == 8){
+            myAddress.PublicAddress = message[1]; myAddress.PublicPort = (message[2]).toInt();
+            clientAddress.PublicAddress = message[3]; clientAddress.PublicPort = (message[4]).toInt();
+            clientAddress.LocalAddress = message[5]; clientAddress.LocalPort = (message[6]).toInt();
+        }
+        qDebug() << myAddress.PublicAddress;
+        qDebug() << QString::number(myAddress.PublicPort);
     }
 }
 
