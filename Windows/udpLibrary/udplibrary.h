@@ -40,11 +40,15 @@ public slots:
     void set_listen_callback();
 
 private:
+
+    void checkData(QString data);
+
     address myAddress;
     address clientAddress;
     address serverAddress;
 //    QUdpSocket * udpSocket;
 
+    QStringList message;
 
 };
 

@@ -68,9 +68,20 @@ void UdpLibrary::set_listen_callback(){
     qDebug("recv success");
     while (udpSocket->hasPendingDatagrams()) {
         QNetworkDatagram datagram = udpSocket->receiveDatagram();
+
+        checkData(datagram.data());
         //processTheDatagram(datagram);
-        qDebug(datagram.data());
+
         //return datagram.data();
+    }
+}
+
+void UdpLibrary::checkData(QString data){
+    qDebug(data.toUtf8());
+    message = data.split("|");      // for example, message is "hello|world|"
+    qDebug() << message.count();    // count = 3, message[0] = "hello", message[1] = "world" ,message[2] = ""
+    for(int index = 0; index < message.count(); index++){
+       qDebug() << message[index];
     }
 }
 
