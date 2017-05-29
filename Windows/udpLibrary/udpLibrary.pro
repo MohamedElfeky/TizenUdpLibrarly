@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       -= gui
+QT       += network
 
 TARGET = udpLibrary
 TEMPLATE = lib

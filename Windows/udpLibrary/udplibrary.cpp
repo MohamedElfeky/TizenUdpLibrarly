@@ -3,34 +3,85 @@
 
 UdpLibrary::UdpLibrary()
 {
+    qDebug("udp start");
+    udpSocket = new QUdpSocket(this);
+    if(!udpSocket){
+        qDebug() << "socket error";
+    }
+    QList<QHostAddress> list = QNetworkInterface::allAddresses();
 
+     for(int nIter=0; nIter<list.count(); nIter++)
+      {
+          if(!list[nIter].isLoopback())
+              if (list[nIter].protocol() == QAbstractSocket::IPv4Protocol ){
+                  myAddress.LocalAddress = list[nIter].toString();
+                  break;
+              }
+
+      }
+
+}
+
+int UdpLibrary::init(QString server, int port)
+{
+    qDebug("start init");
+
+    QHostAddress serverIP = QHostAddress::QHostAddress(server);
+
+    qDebug(server.toUtf8());
+    serverAddress.LocalAddress = serverIP;
+    qDebug(serverAddress.LocalAddress.toString().toUtf8());
+    serverAddress.LocalPort = port;
+    qDebug("end init");
+    return 0;
 }
 
 UdpLibrary * UdpLibrary::singleTonInstance= NULL;
 
-int UdpLibrary::enroll(){
+int UdpLibrary::enroll(QByteArray token, QByteArray id){
+
     qDebug("library test");
+    udpSocket -> connectToHost(serverAddress.LocalAddress, serverAddress.LocalPort, QIODevice::ReadWrite);
+    // data from external function
+    QByteArray datagram = "";
+    datagram = "e|" + token + "|" + id + "|";
+    datagram += myAddress.LocalAddress.toString().toUtf8() + "|" + QByteArray::number(myAddress.LocalPort) + "|";
+    udpSocket->write(datagram);
+    udpSocket->disconnectFromHost();
+    this->bindSocket(myAddress.LocalPort);
     return 0;
 }
 
 int UdpLibrary::connect(){
     return 0;
 }
+
 int UdpLibrary::syncSend(){
     return 0;
 }
+
 int UdpLibrary::asyncSend(){
     return 0;
 }
-int UdpLibrary::set_listen_callback(){
+
+QString UdpLibrary::set_listen_callback(){
+    qDebug("recv success");
+    while (udpSocket->hasPendingDatagrams()) {
+        QNetworkDatagram datagram = udpSocket->receiveDatagram();
+        //processTheDatagram(datagram);
+        qDebug(datagram.data());
+        return datagram.data();
+    }
     return 0;
 }
-int UdpLibrary::bindSocket(){
+
+int UdpLibrary::bindSocket(int port){
+    myAddress.LocalPort = port;
+    udpSocket->bind(myAddress.LocalPort,QUdpSocket::ShareAddress);
+    //udpSocket->bind(QHostAddress::Any,3456);
     return 0;
 }
-int UdpLibrary::listen(){
-    return 0;
-}
+
 UdpLibrary* UdpLibrary::getInstance(){
    if(UdpLibrary::singleTonInstance == 0){
         UdpLibrary::singleTonInstance = new UdpLibrary();
