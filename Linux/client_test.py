@@ -27,7 +27,7 @@ def get_lan_ip():
     return str(ip)
 
 def enroll(token,id):
-    temp_str = "enroll|"+token+'|'+id+'|'+get_lan_ip()+'|'
+    temp_str = "e|"+token+'|'+id+'|'+get_lan_ip()+'|'
     csock1 = socket(AF_INET,SOCK_DGRAM)
     csock1.bind(('', 0))
     temp_str += str(csock1.getsockname()[1])+'|'

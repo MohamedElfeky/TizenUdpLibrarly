@@ -15,7 +15,7 @@ coveragedir = ../Coverage_Report
 
 subninja ../Debug/src/subdir.ninja
 
-targettool = i386-linux-gnueabi-ar
+targettool = arm-linux-gnueabi-ar.exe
 targetflags =  -r
 
 build libtizenudplibrary.a: build_target src/tizenudplibrary.o 
