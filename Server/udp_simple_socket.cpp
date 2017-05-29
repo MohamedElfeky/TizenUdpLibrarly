@@ -143,6 +143,7 @@ void  udp_simple_socket::recv()
         fflush(stdout);
          
         //try to receive some data, this is a blocking call
+        memset(buf,0,1024);
         if ((recv_len = recvfrom(s, buf, 1024, 0, (struct sockaddr *) &si_other, (socklen_t*)&slen)) == -1)
         {
             perror("recvfrom fail()");

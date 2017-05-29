@@ -6,7 +6,7 @@
 // This is an example of an exported method.
 
 int tul_socket;
-struct sockaddr_in si_server,si_other;
+struct sockaddr_in si_server,si_other,si_my_global,si_other_global,si_other_local;
 int i, slen,f_port =23165;
 char recv_buf[BUFF_SIZE] = "";
 char send_buf[BUFF_SIZE] = "";
@@ -105,7 +105,9 @@ int tul_bind_port(int port){// 소켓에 port를 bind 한다.
 
 void tul_listen(void *data, Ecore_Thread *thread){
 	int  recv_len,i=0;
-	char * temp_str =NULL,*temp_string2;
+	char * ip_str=NULL,*port_str=NULL;
+	char	*ptr;
+	int	 ndx;
 	slen = sizeof(si_other);
 	while(1)
 	{
@@ -121,14 +123,51 @@ void tul_listen(void *data, Ecore_Thread *thread){
 
 		dlog_print(DLOG_DEBUG,LOG_TAG,"Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
 		dlog_print(DLOG_DEBUG,LOG_TAG,"Data: %s\n" , recv_buf);
-		temp_string2 = strdup(recv_buf);
 		if(recv_buf[0]=='c'){
 			//TODO 서로 연결을 해야 하느니라아아
 
 			dlog_print(DLOG_DEBUG,LOG_TAG,"connect part" );
-			for(i=0;i<recv_len;i++){
-				dlog_print(DLOG_DEBUG,LOG_TAG,"char is %c" ,recv_buf[i]);
+
+			dlog_print(DLOG_DEBUG,LOG_TAG,"before str is %s\n" ,recv_buf);
+
+
+			ptr = strtok( recv_buf, "|");
+
+			ip_str = strtok( NULL, "|");
+			port_str = strtok( NULL, "|");
+
+			memset((char *) &si_my_global, 0, sizeof(si_my_global));// 서버 ip 초기화
+			si_my_global.sin_family = AF_INET;
+			si_my_global.sin_port = htons(atoi(port_str));
+			if (inet_aton(ip_str, &si_my_global.sin_addr)==0) {
+				dlog_print(DLOG_DEBUG, LOG_TAG, "inet_aton() failed.\n");
+				return;
 			}
+			dlog_print(DLOG_DEBUG,LOG_TAG,"my global %s:%d\n", inet_ntoa(si_my_global.sin_addr), ntohs(si_my_global.sin_port));
+
+			ip_str = strtok( NULL, "|");
+			port_str = strtok( NULL, "|");
+			memset((char *) &si_other_global, 0, sizeof(si_other_global));// 서버 ip 초기화
+			si_other_global.sin_family = AF_INET;
+			si_other_global.sin_port = htons(atoi(port_str));
+			if (inet_aton(ip_str, &si_other_global.sin_addr)==0) {
+				dlog_print(DLOG_DEBUG, LOG_TAG, "inet_aton() failed.\n");
+				return;
+			}
+			dlog_print(DLOG_DEBUG,LOG_TAG,"other global %s:%d\n", inet_ntoa(si_other_global.sin_addr), ntohs(si_other_global.sin_port));
+
+			ip_str = strtok( NULL, "|");
+			port_str = strtok( NULL, "|");
+			memset((char *) &si_other_local, 0, sizeof(si_other_local));// 서버 ip 초기화
+			si_other_local.sin_family = AF_INET;
+			si_other_local.sin_port = htons(atoi(port_str));
+			if (inet_aton(ip_str, &si_other_local.sin_addr)==0) {
+				dlog_print(DLOG_DEBUG, LOG_TAG, "inet_aton() failed.\n");
+				return;
+			}
+			dlog_print(DLOG_DEBUG,LOG_TAG,"other local %s:%d\n", inet_ntoa(si_other_local.sin_addr), ntohs(si_other_local.sin_port));
+			ecore_thread_run(tul_connect_other,NULL,NULL,NULL);
+
 		}
 //		if(m_listen_callback ==NULL){
 //			udp_simple_socket::sendSync(temp_message);
@@ -162,7 +201,26 @@ int tul_add_listen_callback(int(* callBack)(int ,int)){
 }
 
 int send_packet(const struct sockaddr_in to_send,char * message,int message_len){
-	if(sendto(tul_socket, message,message_len, 0, (struct sockaddr*)&to_send, sizeof(to_send))==-1)
+	int i = sendto(tul_socket, message,message_len, 0, (struct sockaddr*)&to_send, sizeof(to_send));
+	dlog_print(DLOG_DEBUG,LOG_TAG,"sendto() is %d\n",i);
+	if(i==-1){
 		dlog_print(DLOG_DEBUG,LOG_TAG,"sendto() failed");
+		return -1;
+	}
 	return 0;
+}
+void tul_connect_other(void *data, Ecore_Thread *thread){
+	int i;
+	for(i=0;i<5;i++){//TODO 안받으면  l|f, 받으면 l|t
+		send_packet(si_other_local,"l|",2);
+		usleep(10000);
+	}
+	for(i=0;i<5;i++){//TODO 안받으면  g|f, 받으면 g|t
+		send_packet(si_other_global,"g|",2);
+		usleep(10000);
+	}
+	for(i=0;i<5;i++){//TODO 릴레이로 안받으면 r|f 받으면 r|t
+		send_packet(si_server,"r|id|r|f",2);
+		usleep(10000);
+	}
 }

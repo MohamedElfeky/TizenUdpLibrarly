@@ -36,6 +36,7 @@ extern "C" {
 // This method is exported from tizenudplibrary.a
 int send_packet(struct sockaddr_in to_send,char * message,int message_len);
 void tul_listen(void *data, Ecore_Thread *thread);
+void tul_connect_other(void *data, Ecore_Thread *thread);
 void tul_listen_end(void *data, Ecore_Thread *thread);
 void tul_listen_cancel(void *data, Ecore_Thread *thread);
 

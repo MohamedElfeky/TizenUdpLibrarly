@@ -120,7 +120,6 @@ int enroll_user(struct sockaddr_in& sender, stringstream & ss){
 }
 
 int my_listen_callback(struct sockaddr_in sender, const std::string& msg){
-    udp_simple_socket::getInstance()->sendSync(sender,"hi");
     stringstream ss(msg);
     string s;
     bool temp = getline(ss,s,'|');
