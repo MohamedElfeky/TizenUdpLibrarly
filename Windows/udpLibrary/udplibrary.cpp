@@ -1,7 +1,7 @@
 #include "udplibrary.h"
 #include <QDebug>
 
-UdpLibrary::UdpLibrary()
+UdpLibrary::UdpLibrary(QObject *parent)
 {
     qDebug("udp start");
     udpSocket = new QUdpSocket(this);
@@ -21,6 +21,9 @@ UdpLibrary::UdpLibrary()
       }
     connect(udpSocket,SIGNAL(readyRead()),this,SLOT(set_listen_callback()));
 }
+UdpLibrary::~UdpLibrary(){
+    delete this->udpSocket;
+}
 
 int UdpLibrary::init(QString server, int port)
 {
@@ -35,6 +38,7 @@ int UdpLibrary::init(QString server, int port)
     qDebug("end init");
     return 0;
 }
+
 
 UdpLibrary * UdpLibrary::singleTonInstance= NULL;
 
@@ -87,8 +91,9 @@ void UdpLibrary::checkData(QString data){
             clientAddress.PublicAddress = message[3]; clientAddress.PublicPort = (message[4]).toInt();
             clientAddress.LocalAddress = message[5]; clientAddress.LocalPort = (message[6]).toInt();
         }
-        qDebug() << myAddress.PublicAddress;
-        qDebug() << QString::number(myAddress.PublicPort);
+        if(message[0] == "u"){
+            emit sendToUser(message);
+        }
     }
 }
 

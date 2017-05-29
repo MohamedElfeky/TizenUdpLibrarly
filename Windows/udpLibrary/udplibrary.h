@@ -1,6 +1,6 @@
 #ifndef UNTITLED_H
 #define UNTITLED_H
-#include <QThread>
+#include <QStringList>
 #include <QHostAddress>
 #include <QUdpSocket>
 #include <QByteArray>
@@ -14,15 +14,14 @@ struct address{
     int PublicPort = 0;
 };
 
-class UdpLibrary : QObject
+class UdpLibrary :public QObject
 {
-
     Q_OBJECT
-
 public:
     static UdpLibrary* singleTonInstance;
 
-    UdpLibrary();
+    UdpLibrary(QObject *parent = 0);
+    ~UdpLibrary();
 
     int UdpLibrary::init(QString server, int port);
     void run();
@@ -35,6 +34,9 @@ public:
     static UdpLibrary* getInstance();
 
     QUdpSocket * udpSocket;
+
+signals:
+    void sendToUser(QStringList message);
 
 public slots:
     void set_listen_callback();
