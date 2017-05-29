@@ -19,7 +19,7 @@ UdpLibrary::UdpLibrary()
               }
 
       }
-
+    connect(udpSocket,SIGNAL(readyRead()),this,SLOT(set_listen_callback()));
 }
 
 int UdpLibrary::init(QString server, int port)
@@ -52,7 +52,7 @@ int UdpLibrary::enroll(QByteArray token, QByteArray id){
     return 0;
 }
 
-int UdpLibrary::connect(){
+int UdpLibrary::connects(){
     return 0;
 }
 
@@ -64,15 +64,14 @@ int UdpLibrary::asyncSend(){
     return 0;
 }
 
-QString UdpLibrary::set_listen_callback(){
+void UdpLibrary::set_listen_callback(){
     qDebug("recv success");
     while (udpSocket->hasPendingDatagrams()) {
         QNetworkDatagram datagram = udpSocket->receiveDatagram();
         //processTheDatagram(datagram);
         qDebug(datagram.data());
-        return datagram.data();
+        //return datagram.data();
     }
-    return 0;
 }
 
 int UdpLibrary::bindSocket(int port){

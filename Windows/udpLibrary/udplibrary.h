@@ -17,6 +17,7 @@ struct address{
 class UdpLibrary : QObject
 {
 
+    Q_OBJECT
 
 public:
     static UdpLibrary* singleTonInstance;
@@ -26,19 +27,24 @@ public:
     int UdpLibrary::init(QString server, int port);
     void run();
     int enroll(QByteArray token, QByteArray id);
-    int connect() ;
+    int connects() ;
     int syncSend() ;
     int asyncSend() ;
-    QString set_listen_callback();
     int bindSocket(int port);
     int listen() ;
     static UdpLibrary* getInstance();
 
+    QUdpSocket * udpSocket;
+
+public slots:
+    void set_listen_callback();
+
+private:
     address myAddress;
     address clientAddress;
     address serverAddress;
+//    QUdpSocket * udpSocket;
 
-    QUdpSocket * udpSocket;
 
 };
 
