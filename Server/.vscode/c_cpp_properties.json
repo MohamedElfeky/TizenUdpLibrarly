@@ -23,18 +23,12 @@
                 "${workspaceRoot}",
                 "/usr/include",
                 "/usr/local/include",
-                "C:/Users/sangwon0001/AppData/Local/lxss/rootfs/usr/include"
+                "C:/Users/dhtpr/AppData/Local/lxss/rootfs/usr/include"
             ],
             "defines": [],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": "",
-                "path": [
-                    "${workspaceRoot}",
-                    "/usr/include",
-                    "/usr/local/include",
-                    "C:/Users/sangwon0001/AppData/Local/lxss/rootfs/usr/include"
-                ]
+                "databaseFilename": ""
             }
         },
         {

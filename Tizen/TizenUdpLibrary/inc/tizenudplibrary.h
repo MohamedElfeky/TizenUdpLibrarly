@@ -24,11 +24,13 @@
 #undef  LOG_TAG
 #endif
 #define LOG_TAG "TUL"
-#define NOT_CONNECTED 0
+#define TUL_NOT_CONNECTED 0
+#define TUL_RECEIVED 1
+#define TUL_CONNECTED 2
 
-#define CONNECTED_LOCAL 1
-#define CONNECTED_GLOBAL 2
-#define CONNECTED_RELAY 3
+#define TUL_CONNECTED_LOCAL 1
+#define TUL_CONNECTED_GLOBAL 2
+#define TUL_CONNECTED_RELAY 3
 #ifdef __cplusplus
 extern "C" {
 #endif

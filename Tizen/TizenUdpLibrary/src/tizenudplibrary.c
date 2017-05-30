@@ -13,7 +13,7 @@ char send_buf[BUFF_SIZE] = "";
 char str1[BUFF_SIZE]="",str2[BUFF_SIZE]="";
 char * my_ip = NULL;
 int(* my_listen_call_back)(int ,int);
-int is_connected = NOT_CONNECTED, is_init = 0;
+int is_connected = TUL_NOT_CONNECTED, is_init = 0,connected_state =TUL_NOT_CONNECTED;
 Ecore_Thread * listen_thread;
 
 int tul_init(char * server_ip,int port)
@@ -64,7 +64,7 @@ int tul_enroll(char * token,char * id)
 
 int tul_send_sync(char * message,int message_len){
 
-	if(is_connected==NOT_CONNECTED){
+	if(is_connected==TUL_NOT_CONNECTED){
 		dlog_print(DLOG_DEBUG,LOG_TAG,"not connected");
 		return -1;
 	}
@@ -73,12 +73,20 @@ int tul_send_sync(char * message,int message_len){
 
 int tul_send_async(char * message,int message_len,int(* callBack)(int ,int))
 {
-
-	if(is_connected==NOT_CONNECTED){
+	struct sockaddr_in temp;
+	if(is_connected==TUL_NOT_CONNECTED){
 		dlog_print(DLOG_DEBUG,LOG_TAG,"not connected");
 		return -1;
 	}
-	return 0;
+	sprintf(send_buf,"m|%s",message);
+	if(connected_state == TUL_CONNECTED_LOCAL){
+		temp = si_other_local;
+	}else if(connected_state == TUL_CONNECTED_GLOBAL){
+		temp = si_other_global;
+	}else{
+		temp = si_server;
+	}
+	return send_packet(temp,send_buf,strlen(send_buf));
 }
 
 int tul_bind_port(int port){// 소켓에 port를 bind 한다.
@@ -104,10 +112,9 @@ int tul_bind_port(int port){// 소켓에 port를 bind 한다.
 
 
 void tul_listen(void *data, Ecore_Thread *thread){
-	int  recv_len,i=0;
+	int  recv_len;
 	char * ip_str=NULL,*port_str=NULL;
 	char	*ptr;
-	int	 ndx;
 	slen = sizeof(si_other);
 	while(1)
 	{
@@ -123,8 +130,7 @@ void tul_listen(void *data, Ecore_Thread *thread){
 
 		dlog_print(DLOG_DEBUG,LOG_TAG,"Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
 		dlog_print(DLOG_DEBUG,LOG_TAG,"Data: %s\n" , recv_buf);
-		if(recv_buf[0]=='c'){
-			//TODO 서로 연결을 해야 하느니라아아
+		if(recv_buf[0]=='c'){										//서버에서 연결하라고 준 스트링
 
 			dlog_print(DLOG_DEBUG,LOG_TAG,"connect part" );
 
@@ -168,6 +174,12 @@ void tul_listen(void *data, Ecore_Thread *thread){
 			dlog_print(DLOG_DEBUG,LOG_TAG,"other local %s:%d\n", inet_ntoa(si_other_local.sin_addr), ntohs(si_other_local.sin_port));
 			ecore_thread_run(tul_connect_other,NULL,NULL,NULL);
 
+		}else if(recv_buf[0]=='l'||recv_buf[0]=='g'||recv_buf[0]=='r'){			//상대편 클라이언트에서 온 스트링
+			if(recv_buf[2]=='f'){
+				is_connected = TUL_RECEIVED;
+			}else if(recv_buf[2]=='t'){
+				is_connected = TUL_CONNECTED;
+			}
 		}
 //		if(m_listen_callback ==NULL){
 //			udp_simple_socket::sendSync(temp_message);
@@ -202,25 +214,58 @@ int tul_add_listen_callback(int(* callBack)(int ,int)){
 
 int send_packet(const struct sockaddr_in to_send,char * message,int message_len){
 	int i = sendto(tul_socket, message,message_len, 0, (struct sockaddr*)&to_send, sizeof(to_send));
-	dlog_print(DLOG_DEBUG,LOG_TAG,"sendto() is %d\n",i);
 	if(i==-1){
 		dlog_print(DLOG_DEBUG,LOG_TAG,"sendto() failed");
 		return -1;
 	}
 	return 0;
 }
-void tul_connect_other(void *data, Ecore_Thread *thread){
+void tul_connect_other(void *data, Ecore_Thread *thread){	//홀펀칭 및 연결 시도
 	int i;
-	for(i=0;i<5;i++){//TODO 안받으면  l|f, 받으면 l|t
-		send_packet(si_other_local,"l|",2);
+	for(i=0;i<5;i++){										// 로컬 연결 시도
+		if(is_connected == TUL_NOT_CONNECTED){
+			send_packet(si_other_local,"l|f",3);			//연결안되면 l|f
+		}
+		else{
+			send_packet(si_other_local,"l|t",3);			//받으면 받으면 l|t
+		}
 		usleep(10000);
 	}
-	for(i=0;i<5;i++){//TODO 안받으면  g|f, 받으면 g|t
-		send_packet(si_other_global,"g|",2);
-		usleep(10000);
+	usleep(100000);
+	if(is_connected==TUL_CONNECTED){
+		connected_state = TUL_CONNECTED_LOCAL;				//현재 연결을 LOCAL 로 설정
+	}else{
+
+
+		is_connected = TUL_NOT_CONNECTED;					//글로벌 연결 시도
+		for(i=0;i<5;i++){
+			if(is_connected == TUL_NOT_CONNECTED){
+				send_packet(si_other_local,"g|f",3);		//연결안되면 g|f
+			}
+			else{
+				send_packet(si_other_local,"g|t",3);		//연결되면 g|t
+			}
+			usleep(10000);
+		}
+		if(is_connected==TUL_CONNECTED){
+			connected_state = TUL_CONNECTED_GLOBAL;			//현재 연결을 GLOBAL로 설정
+		}else{
+
+
+			is_connected = TUL_NOT_CONNECTED;				//global 로 연결 시도
+			for(i=0;i<5;i++){
+				if(is_connected == TUL_NOT_CONNECTED){
+					send_packet(si_other_local,"r|f",3);	//연결안되면 r|f
+				}
+				else{
+					send_packet(si_other_local,"r|t",3);	//연결되면 r|t
+				}
+				usleep(10000);
+			}
+		}if(is_connected==TUL_CONNECTED){
+			connected_state = TUL_CONNECTED_GLOBAL;
+		}
 	}
-	for(i=0;i<5;i++){//TODO 릴레이로 안받으면 r|f 받으면 r|t
-		send_packet(si_server,"r|id|r|f",2);
-		usleep(10000);
-	}
+	dlog_print(DLOG_DEBUG,LOG_TAG,"current state is %d",connected_state);
+
 }
