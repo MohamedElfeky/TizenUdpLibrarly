@@ -255,10 +255,10 @@ void tul_connect_other(void *data, Ecore_Thread *thread){	//홀펀칭 및 연결
 			is_connected = TUL_NOT_CONNECTED;				//global 로 연결 시도
 			for(i=0;i<5;i++){
 				if(is_connected == TUL_NOT_CONNECTED){
-					send_packet(si_other_local,"r|f",3);	//연결안되면 r|f
+					send_packet(si_server,"r|f",3);	//연결안되면 r|f
 				}
 				else{
-					send_packet(si_other_local,"r|t",3);	//연결되면 r|t
+					send_packet(si_server,"r|t",3);	//연결되면 r|t
 				}
 				usleep(10000);
 			}
