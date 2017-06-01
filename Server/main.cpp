@@ -17,6 +17,37 @@ struct user {
 
 vector<struct user> user_vector;
 
+int relay_user(struct sockaddr_in sender,stringstream & ss,char relay_char){
+    string message;
+    message = ss.str();
+    if(relay_char == 'R'){
+        message[0]='m';
+    }
+    vector<struct user>::iterator vi;
+    struct user to_connect,me;//연결할놈
+    int to_connect_count=0;//연결할놈 카운트
+    for(vi = user_vector.begin();vi!=user_vector.end();){
+        //TODO ip 비교하고 다르면 연결 refresh
+        if(sender.sin_addr.s_addr == vi->global.sin_addr.s_addr&&sender.sin_port==vi->global.sin_port){
+            cout<<"find me"<<endl;
+            me = *vi;
+            cout<<me.token<<"  "<<me.id<<endl;
+            break;
+        }
+        vi++;
+    }
+    for(vi = user_vector.begin();vi!=user_vector.end();){
+        //TODO ip 비교하고 다르면 연결 refresh
+        if(vi->token.compare(me.token)==0 && vi->id.compare(me.id)!=0){
+            cout<<"find other"<<endl;
+            to_connect = *vi;
+            break;
+        }
+        vi++;
+    }
+    udp_simple_socket::getInstance()->sendSync(to_connect.global,message);
+}
+
 int connect_two_user(struct user&user_A,struct user&user_B){//두 유저한테 연결정보 갱신 알려줌
     stringstream to_stream_A,to_stream_B;
     string connect_string("c");
@@ -127,6 +158,9 @@ int my_listen_callback(struct sockaddr_in sender, const std::string& msg){
         if(s.compare("e")==0){
             cout << "enroll part" << endl;
             enroll_user(sender,ss);
+        }else if(s.compare("r")==0||s.compare("R")==0){
+            cout << "relay data" <<endl;
+            relay_user(sender,ss,s[0]);
         }
     }
     cout<<"this is callback"<<endl;

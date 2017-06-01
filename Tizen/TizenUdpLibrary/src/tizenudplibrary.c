@@ -12,7 +12,7 @@ char recv_buf[BUFF_SIZE] = "";
 char send_buf[BUFF_SIZE] = "";
 char str1[BUFF_SIZE]="",str2[BUFF_SIZE]="";
 char * my_ip = NULL;
-int(* my_listen_call_back)(int ,int);
+void(* my_listen_call_back)(void *, Ecore_Thread *, void *);
 int is_connected = TUL_NOT_CONNECTED, is_init = 0,connected_state =TUL_NOT_CONNECTED;
 Ecore_Thread * listen_thread;
 
@@ -62,16 +62,8 @@ int tul_enroll(char * token,char * id)
 	return send_packet(si_server,send_buf,strlen(send_buf));
 }
 
-int tul_send_sync(char * message,int message_len){
 
-	if(is_connected==TUL_NOT_CONNECTED){
-		dlog_print(DLOG_DEBUG,LOG_TAG,"not connected");
-		return -1;
-	}
-	return 0;
-}
-
-int tul_send_async(char * message,int message_len,int(* callBack)(int ,int))
+int tul_send(char * message,int message_len)
 {
 	struct sockaddr_in temp;
 	if(is_connected==TUL_NOT_CONNECTED){
@@ -181,11 +173,16 @@ void tul_listen(void *data, Ecore_Thread *thread){
 				is_connected = TUL_CONNECTED;
 			}
 		}
-//		if(m_listen_callback ==NULL){
-//			udp_simple_socket::sendSync(temp_message);
-//		}else{
-//			m_listen_callback(si_other,temp_message);
-//		}
+		if(my_listen_call_back !=NULL){
+			if(recv_buf[0]=='m'){										//서버에서 연결하라고 준 스트링
+
+				dlog_print(DLOG_DEBUG,LOG_TAG,"connect part" );
+
+				dlog_print(DLOG_DEBUG,LOG_TAG,"before str is %s\n" ,recv_buf+2);
+
+				ecore_thread_feedback(thread, (void*)recv_buf+2);
+			}
+		}
 	}
 }
 
@@ -197,8 +194,9 @@ void tul_listen_cancel(void *data, Ecore_Thread *thread){
 	dlog_print(DLOG_DEBUG,LOG_TAG,"tul_listen() canceled");
 }
 
-int tul_start_listen(void * data){
-	listen_thread =  ecore_thread_feedback_run(tul_listen, NULL,tul_listen_end, NULL,data, EINA_FALSE);
+int tul_start_listen(void (*callBack)(void *, Ecore_Thread *, void *), void * data){
+	my_listen_call_back = callBack;
+	listen_thread =  ecore_thread_feedback_run(tul_listen, callBack,tul_listen_end, NULL,data, EINA_FALSE);
 	return 0;
 }
 
@@ -207,7 +205,7 @@ int tul_stop_listen(){
 	return 0;
 }
 
-int tul_add_listen_callback(int(* callBack)(int ,int)){
+int tul_add_listen_callback(void(* callBack)(void *, Ecore_Thread *, void *)){
 	my_listen_call_back = callBack;
 	return 0;
 }

@@ -17,6 +17,9 @@
         "new": "cpp",
         "ostream": "cpp",
         "streambuf": "cpp",
-        "type_traits": "cpp"
+        "type_traits": "cpp",
+        "xstring": "cpp",
+        "string": "cpp",
+        "xutility": "cpp"
     }
 }
