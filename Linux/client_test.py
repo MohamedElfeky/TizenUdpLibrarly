@@ -54,3 +54,16 @@ def enrollandlisten(token,id):
     s, addr = csock1.recvfrom(1024)
     print(s)
     print(addr)
+
+def e():
+    csock1 = socket(AF_INET, SOCK_DGRAM)
+    csock1.sendto("c|222.2.2.2|12341|212.31.2.6|1231|212.31.2.6|1231|".encode('utf-8'), ('127.0.0.1',3456))
+    s()
+
+def s():
+    csock1 = socket(AF_INET, SOCK_DGRAM)
+    csock1.sendto("l|f".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("l|f".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("l|t".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("l|t".encode('utf-8'), ('127.0.0.1',3456))
+    
