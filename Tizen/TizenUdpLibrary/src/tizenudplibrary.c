@@ -190,7 +190,6 @@ void tul_listen(void *data, Ecore_Thread *thread){
 				dlog_print(DLOG_DEBUG,LOG_TAG,"received msg is %s\n" ,recv_buf+2);
 				char * temp_msg;
 				temp_msg =malloc(strlen(recv_buf+2)*sizeof(char));
-				memset(temp_msg, 0, sizeof(strlen(recv_buf+2)*sizeof(char)));// 서버 ip 초기화
 				strcpy(temp_msg,recv_buf+2);
 				if(ecore_thread_feedback(thread, (void*)temp_msg)==EINA_FALSE){
 					dlog_print(DLOG_WARN,LOG_TAG,"feedback_fail" );
@@ -236,6 +235,17 @@ int send_packet(const struct sockaddr_in to_send,char * message,int message_len)
 		return -1;
 	}
 	return 0;
+}
+int tul_get_time_id(char ** id){
+	char * temp_msg;
+	temp_msg =malloc(10*sizeof(char));
+	time_t raw_time;
+	struct tm* time_info;
+
+	time(&raw_time);
+	time_info = localtime(&raw_time);
+	sprintf(temp_msg,"%X",raw_time);
+	*id = temp_msg;
 }
 void tul_connect_other(void *data, Ecore_Thread *thread){	//홀펀칭 및 연결 시도
 	int i;

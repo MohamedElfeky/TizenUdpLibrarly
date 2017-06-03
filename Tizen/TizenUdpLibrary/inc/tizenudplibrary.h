@@ -59,6 +59,10 @@ extern int tul_init(char * server_ip,int port);
 
 extern int tul_add_listen_callback(void(* callBack)(void *, Ecore_Thread *, void *));
 
+extern int tul_get_time_id(char ** id);
+
+extern int tul_enroll(char * token,char * id);
+
 #ifdef __cplusplus
 }
 #endif

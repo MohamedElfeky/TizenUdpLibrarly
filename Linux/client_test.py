@@ -1,6 +1,6 @@
 from socket import *
 import os
-
+e_ip = "10.210.61.183"
 def test():
     csock1 = socket(AF_INET, SOCK_DGRAM)
     csock1.sendto("Hello, World!".encode('utf-8'), ('192.168.0.109',23272))
@@ -64,27 +64,35 @@ def e():
 
 def m():
     csock1 = socket(AF_INET, SOCK_DGRAM)
-    csock1.sendto("m|mouse|move|1|0".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|mouse|move|1|0".encode('utf-8'), (e_ip,3456))
 
 
 def ppt():
     csock1 = socket(AF_INET, SOCK_DGRAM)
-    csock1.sendto("m|ppt|start".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|ppt|next".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|ppt|start".encode('utf-8'), (e_ip,3456))
+
+def n():
+    csock1 = socket(AF_INET, SOCK_DGRAM)
+    csock1.sendto("m|ppt|next".encode('utf-8'), (e_ip,3456))
+
+def off():
+    csock1 = socket(AF_INET, SOCK_DGRAM)
+    csock1.sendto("m|pc|off".encode('utf-8'), (e_ip,3456))
+     
 
 
 def pdf():
     csock1 = socket(AF_INET, SOCK_DGRAM)
-    csock1.sendto("m|pdf|next".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|pdf|next".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|pdf|next".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|pdf|next".encode('utf-8'), (e_ip,3456))
     
 
 def v():
     csock1 = socket(AF_INET, SOCK_DGRAM)
-    csock1.sendto("m|video|start".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|video|start".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|video|next".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|video|next".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|video|next".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|video|next".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|video|next".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|video|next".encode('utf-8'), (e_ip,3456))
