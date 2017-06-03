@@ -23,6 +23,21 @@ enum CONNECT{
     NOT_CONNECTED
 };
 
+class connectLibrary :public QObject
+{
+    Q_OBJECT
+
+public:
+    connectLibrary(QObject *parent = 0);
+
+public slots:
+    void connect_other();
+
+signals:
+    void writeReady(char);
+
+};
+
 class UdpLibrary :public QObject
 {
     Q_OBJECT
@@ -32,43 +47,40 @@ public:
     UdpLibrary(QObject *parent = 0);
     ~UdpLibrary();
 
+    connectLibrary *cl;
+
+//    QUdpSocket * udpSocket;
+    QThread * connectThread;
     int UdpLibrary::init(QString server, int port);
 
     int enroll(QByteArray token, QByteArray id);
     int connects(QByteArray token, QByteArray id);
 //    void run();
-    int syncSend(QHostAddress address,int port, QString datagram);
+
 //    int asyncSend() ;
     int bindSocket(int port);
 //    int listen() ;
     static UdpLibrary* getInstance();
-
-    QUdpSocket * udpSocket;
-
 signals:
     void sendToUser(QStringList message);
 
 public slots:
     void set_listen_callback();
-    void connect_other();
+    void checkConnect(char);
 
 private:
 
-    QThread *thread;
+    void syncSend(QHostAddress address,int port, QString datagram);
 
+    QThread *thread;
+    void connect_other();
     void checkData(QString data);
     void threadStart();
 
-    address myAddress;
-    address clientAddress;
-    address serverAddress;
-//    QUdpSocket * udpSocket;
+    QUdpSocket * udpSocket;
 
     QStringList message;
-    int connectState = CONNECT::NOT_CONNECTED;
-    bool recvf = false;
-    bool recvt = false;
-    bool start = false;
 };
+
 
 #endif // UNTITLED_H

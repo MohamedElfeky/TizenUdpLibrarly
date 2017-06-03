@@ -6,6 +6,7 @@
 
 QT       -= gui
 QT       += network
+QT       += concurrent
 
 TARGET = udpLibrary
 TEMPLATE = lib
