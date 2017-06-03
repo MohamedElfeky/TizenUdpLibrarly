@@ -40,9 +40,9 @@ Tizen UDP Library 는 Tizen 과 Windows의 신뢰성있는 p2p 통신을 지원�
 #### 클라이언트 통신 API 설명
 사용자는 sendAsync 와 sendSync, onReceived 함수 3가지를 사용할 수 있다.
 
-sendAsync 함수 사용 예시
+send 함수 사용 예시
 ```cpp
-// 비동기 방식의 Send 함수
+// Send 함수
 String token = "사용자 인증 토큰";//인증 과정에서 받아온 토큰
 int myCallbackFunction(){//해당 함수가 끝난 후 실행할 콜백 함수
 ......
@@ -50,12 +50,6 @@ int myCallbackFunction(){//해당 함수가 끝난 후 실행할 콜백 함수
 sendAsync(token,"보낼 메시지",myCallbackFunction);//메시지 보내기
 ```
 
-sendSync 함수 사용 예시
-```cpp
-// 동기 방식의 Send 함수
-String token = "사용자 인증 토큰";//인증 과정에서 받아온 토큰
-sendSync(token,"보낼 메시지");//메시지 보내기
-```
 onReceived 함수 사용 예시
 ```cpp
 // 리스너 함수를 등록하여 패킷을 받았을 때 리스너 함수를 실행한다.
