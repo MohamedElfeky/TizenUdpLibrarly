@@ -249,47 +249,48 @@ int tul_get_time_id(char ** id){
 }
 void tul_connect_other(void *data, Ecore_Thread *thread){	//홀펀칭 및 연결 시도
 	int i;
-	for(i=0;i<10;i++){										// 로컬 연결 시도
+	for(i=0;i<20;i++){										// 로컬 연결 시도
 		if(is_connected == TUL_NOT_CONNECTED){
 			send_packet(si_other_local,"l|f",3);			//연결안되면 l|f
 		}
 		else{
 			send_packet(si_other_local,"l|t",3);			//받으면 받으면 l|t
 		}
-		usleep(10000);
+		usleep(5000);
 	}
-	usleep(100000);
+	usleep(200000);
 	if(is_connected==TUL_CONNECTED){
 		connected_state = TUL_CONNECTED_LOCAL;				//현재 연결을 LOCAL 로 설정
 	}else{
 
 
 		is_connected = TUL_NOT_CONNECTED;					//글로벌 연결 시도
-		for(i=0;i<10;i++){
+		for(i=0;i<20;i++){
 			if(is_connected == TUL_NOT_CONNECTED){
 				send_packet(si_other_global,"g|f",3);		//연결안되면 g|f
 			}
 			else{
 				send_packet(si_other_global,"g|t",3);		//연결되면 g|t
 			}
-			usleep(10000);
+			usleep(5000);
 		}
-		usleep(100000);
+		usleep(200000);
 		if(is_connected==TUL_CONNECTED){
 			connected_state = TUL_CONNECTED_GLOBAL;			//현재 연결을 GLOBAL로 설정
 		}else{
 
 
 			is_connected = TUL_NOT_CONNECTED;				//global 로 연결 시도
-			for(i=0;i<10;i++){
+			for(i=0;i<20;i++){
 				if(is_connected == TUL_NOT_CONNECTED){
 					send_packet(si_server,"r|f",3);	//연결안되면 r|f
 				}
 				else{
 					send_packet(si_server,"r|t",3);	//연결되면 r|t
 				}
-				usleep(10000);
+				usleep(5000);
 			}
+			usleep(200000);
 		}if(is_connected==TUL_CONNECTED){
 			connected_state = TUL_CONNECTED_RELAY;
 		}
