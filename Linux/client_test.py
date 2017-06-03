@@ -31,8 +31,8 @@ def enroll(token,id):
     csock1 = socket(AF_INET,SOCK_DGRAM)
     csock1.bind(('', 0))
     temp_str += str(csock1.getsockname()[1])+'|'
-    csock1.sendto(temp_str.encode('utf-8'), ('127.0.0.1',23272))
-#    csock1.sendto(temp_str.encode('utf-8'), ('165.194.17.3',23272))
+#    csock1.sendto(temp_str.encode('utf-8'), ('127.0.0.1',23272))
+    csock1.sendto(temp_str.encode('utf-8'), ('165.194.17.5',23272))
     print(temp_str)
     
 def enroll_test():

@@ -51,7 +51,7 @@ extern int tul_connect(char * token,char * id);
 
 extern int tul_enroll(char * token,char * id);
 
-extern int tul_start_listen(void (*callBack)(void *, Ecore_Thread *, void *), void * data);
+extern int tul_start_listen(Ecore_Thread_Notify_Cb callback, void * data);
 
 extern int tul_stop_listen();
 

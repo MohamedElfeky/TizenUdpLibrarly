@@ -12,9 +12,10 @@ char recv_buf[BUFF_SIZE] = "";
 char send_buf[BUFF_SIZE] = "";
 char str1[BUFF_SIZE]="",str2[BUFF_SIZE]="";
 char * my_ip = NULL;
-void(* my_listen_call_back)(void *, Ecore_Thread *, void *);
+Ecore_Thread_Notify_Cb my_listen_call_back;
 int is_connected = TUL_NOT_CONNECTED, is_init = 0,connected_state =TUL_NOT_CONNECTED;
 Ecore_Thread * listen_thread;
+bool listening = false;
 
 int tul_init(char * server_ip,int port)
 {
@@ -70,13 +71,18 @@ int tul_send(char * message,int message_len)
 		dlog_print(DLOG_DEBUG,LOG_TAG,"not connected");
 		return -1;
 	}
-	sprintf(send_buf,"m|%s",message);
 	if(connected_state == TUL_CONNECTED_LOCAL){
 		temp = si_other_local;
+
+		sprintf(send_buf,"m|%s",message);
 	}else if(connected_state == TUL_CONNECTED_GLOBAL){
 		temp = si_other_global;
+
+		sprintf(send_buf,"m|%s",message);
 	}else{
 		temp = si_server;
+
+		sprintf(send_buf,"R|%s",message);
 	}
 	return send_packet(temp,send_buf,strlen(send_buf));
 }
@@ -108,7 +114,7 @@ void tul_listen(void *data, Ecore_Thread *thread){
 	char * ip_str=NULL,*port_str=NULL;
 	char	*ptr;
 	slen = sizeof(si_other);
-	while(1)
+	while(thread == listen_thread)
 	{
 		dlog_print(DLOG_DEBUG,LOG_TAG,"Waiting for data...");
 		memset(recv_buf, 0, BUFF_SIZE);
@@ -168,19 +174,29 @@ void tul_listen(void *data, Ecore_Thread *thread){
 
 		}else if(recv_buf[0]=='l'||recv_buf[0]=='g'||recv_buf[0]=='r'){			//상대편 클라이언트에서 온 스트링
 			if(recv_buf[2]=='f'){
+
+				dlog_print(DLOG_DEBUG,LOG_TAG,"connect each other part first recv" );
 				is_connected = TUL_RECEIVED;
 			}else if(recv_buf[2]=='t'){
+				dlog_print(DLOG_DEBUG,LOG_TAG,"connect each other part confirm recv" );
 				is_connected = TUL_CONNECTED;
 			}
 		}
 		if(my_listen_call_back !=NULL){
 			if(recv_buf[0]=='m'){										//서버에서 연결하라고 준 스트링
 
-				dlog_print(DLOG_DEBUG,LOG_TAG,"connect part" );
+				dlog_print(DLOG_DEBUG,LOG_TAG,"message part" );
 
-				dlog_print(DLOG_DEBUG,LOG_TAG,"before str is %s\n" ,recv_buf+2);
-
-				ecore_thread_feedback(thread, (void*)recv_buf+2);
+				dlog_print(DLOG_DEBUG,LOG_TAG,"received msg is %s\n" ,recv_buf+2);
+				char * temp_msg;
+				temp_msg =malloc(strlen(recv_buf+2)*sizeof(char));
+				memset(temp_msg, 0, sizeof(strlen(recv_buf+2)*sizeof(char)));// 서버 ip 초기화
+				strcpy(temp_msg,recv_buf+2);
+				if(ecore_thread_feedback(thread, (void*)temp_msg)==EINA_FALSE){
+					dlog_print(DLOG_WARN,LOG_TAG,"feedback_fail" );
+				}else{
+					dlog_print(DLOG_WARN,LOG_TAG,"feedback_success" );
+				}
 			}
 		}
 	}
@@ -194,14 +210,17 @@ void tul_listen_cancel(void *data, Ecore_Thread *thread){
 	dlog_print(DLOG_DEBUG,LOG_TAG,"tul_listen() canceled");
 }
 
-int tul_start_listen(void (*callBack)(void *, Ecore_Thread *, void *), void * data){
+int tul_start_listen(Ecore_Thread_Notify_Cb callBack, void * data){
 	my_listen_call_back = callBack;
-	listen_thread =  ecore_thread_feedback_run(tul_listen, callBack,tul_listen_end, NULL,data, EINA_FALSE);
+	listen_thread =  ecore_thread_feedback_run(tul_listen, callBack,tul_listen_end, tul_listen_cancel,data, EINA_TRUE);
+	dlog_print(DLOG_DEBUG,LOG_TAG,"thread id is %d (make)",listen_thread);
 	return 0;
 }
 
 int tul_stop_listen(){
+	dlog_print(DLOG_DEBUG,LOG_TAG,"thread id is %d (cancel)",listen_thread);
 	ecore_thread_cancel(listen_thread);
+	listen_thread=NULL;
 	return 0;
 }
 
@@ -220,7 +239,7 @@ int send_packet(const struct sockaddr_in to_send,char * message,int message_len)
 }
 void tul_connect_other(void *data, Ecore_Thread *thread){	//홀펀칭 및 연결 시도
 	int i;
-	for(i=0;i<5;i++){										// 로컬 연결 시도
+	for(i=0;i<10;i++){										// 로컬 연결 시도
 		if(is_connected == TUL_NOT_CONNECTED){
 			send_packet(si_other_local,"l|f",3);			//연결안되면 l|f
 		}
@@ -236,22 +255,23 @@ void tul_connect_other(void *data, Ecore_Thread *thread){	//홀펀칭 및 연결
 
 
 		is_connected = TUL_NOT_CONNECTED;					//글로벌 연결 시도
-		for(i=0;i<5;i++){
+		for(i=0;i<10;i++){
 			if(is_connected == TUL_NOT_CONNECTED){
-				send_packet(si_other_local,"g|f",3);		//연결안되면 g|f
+				send_packet(si_other_global,"g|f",3);		//연결안되면 g|f
 			}
 			else{
-				send_packet(si_other_local,"g|t",3);		//연결되면 g|t
+				send_packet(si_other_global,"g|t",3);		//연결되면 g|t
 			}
 			usleep(10000);
 		}
+		usleep(100000);
 		if(is_connected==TUL_CONNECTED){
 			connected_state = TUL_CONNECTED_GLOBAL;			//현재 연결을 GLOBAL로 설정
 		}else{
 
 
 			is_connected = TUL_NOT_CONNECTED;				//global 로 연결 시도
-			for(i=0;i<5;i++){
+			for(i=0;i<10;i++){
 				if(is_connected == TUL_NOT_CONNECTED){
 					send_packet(si_server,"r|f",3);	//연결안되면 r|f
 				}
@@ -261,7 +281,7 @@ void tul_connect_other(void *data, Ecore_Thread *thread){	//홀펀칭 및 연결
 				usleep(10000);
 			}
 		}if(is_connected==TUL_CONNECTED){
-			connected_state = TUL_CONNECTED_GLOBAL;
+			connected_state = TUL_CONNECTED_RELAY;
 		}
 	}
 	dlog_print(DLOG_DEBUG,LOG_TAG,"current state is %d",connected_state);
