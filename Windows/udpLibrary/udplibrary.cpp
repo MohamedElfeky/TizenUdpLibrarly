@@ -166,7 +166,7 @@ void UdpLibrary::threadStart(){
     connect(thread, &QThread::finished, this, &QObject::deleteLater);
     connect(thread, SIGNAL(started()), this, SLOT(connect_other()));
     moveToThread(thread);
-    udpSocket->bind(3456);
+    udpSocket->bind(myAddress.LocalPort);
     qDebug() << "tt";
     thread->start();
 }
@@ -184,6 +184,7 @@ void UdpLibrary::checkData(QString data){
             //QFuture<void> future = QtConcurrent::run( this , &UdpLibrary::connect_other );
         }
         else if(message[0] == "m"){
+            message.removeFirst();
             emit sendToUser(message);
         }
         else if(message[0] == "l" || message[0] == "g" || message[0] == "t" ){

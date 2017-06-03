@@ -62,10 +62,29 @@ def e():
     for i  in range (1, 10):
         s()
 
-def s():
+def m():
     csock1 = socket(AF_INET, SOCK_DGRAM)
-    csock1.sendto("l|f".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("l|f".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("l|t".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("l|t".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|mouse|move|1|0".encode('utf-8'), ('127.0.0.1',3456))
+
+
+def ppt():
+    csock1 = socket(AF_INET, SOCK_DGRAM)
+    csock1.sendto("m|ppt|start".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|ppt|next".encode('utf-8'), ('127.0.0.1',3456))
+
+
+def pdf():
+    csock1 = socket(AF_INET, SOCK_DGRAM)
+    csock1.sendto("m|pdf|next".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|pdf|next".encode('utf-8'), ('127.0.0.1',3456))
     
+
+def v():
+    csock1 = socket(AF_INET, SOCK_DGRAM)
+    csock1.sendto("m|video|start".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
