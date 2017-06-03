@@ -58,7 +58,9 @@ def enrollandlisten(token,id):
 def e():
     csock1 = socket(AF_INET, SOCK_DGRAM)
     csock1.sendto("c|222.2.2.2|12341|212.31.2.6|1231|212.31.2.6|1231|".encode('utf-8'), ('127.0.0.1',3456))
-    s()
+    i = 0
+    for i  in range (1, 10):
+        s()
 
 def s():
     csock1 = socket(AF_INET, SOCK_DGRAM)

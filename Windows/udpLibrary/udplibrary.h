@@ -54,7 +54,7 @@ public slots:
 
 private:
 
-    QThread thread;
+    QThread *thread;
 
     void checkData(QString data);
     void threadStart();
@@ -68,7 +68,7 @@ private:
     int connectState = CONNECT::NOT_CONNECTED;
     bool recvf = false;
     bool recvt = false;
-
+    bool start = false;
 };
 
 #endif // UNTITLED_H

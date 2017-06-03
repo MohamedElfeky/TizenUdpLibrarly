@@ -20,8 +20,9 @@ UdpLibrary::UdpLibrary(QObject *parent)
               }
       }
 
+     //thread = new QThread();
      connect(udpSocket,SIGNAL(readyRead()),this,SLOT(set_listen_callback()));
-     connect(&thread, SIGNAL(started()), this, SLOT(connect_other()));
+
 }
 
 UdpLibrary::~UdpLibrary(){
@@ -147,9 +148,27 @@ void UdpLibrary::set_listen_callback(){
 }
 
 void UdpLibrary::threadStart(){
+    /*if(thread->isRunning()){
+        thread->quit();
+        qDebug() << "thread exit()";
+        thread->wait();
+        qDebug() << "thread exit()";
+        thread->terminate();
+        qDebug() << "thread exit()";
+        thread->destroyed();
+        qDebug() << "thread exit()";
+        delete thread;
+        qDebug() << "thread exit()";
+        thread = new QThread();
+        qDebug() << "thread exit()";
+    }*/
+    thread = new QThread();
+    connect(thread, &QThread::finished, this, &QObject::deleteLater);
+    connect(thread, SIGNAL(started()), this, SLOT(connect_other()));
+    moveToThread(thread);
+    udpSocket->bind(3456);
     qDebug() << "tt";
-    moveToThread(&thread);
-    thread.start();
+    thread->start();
 }
 
 void UdpLibrary::checkData(QString data){
@@ -162,13 +181,15 @@ void UdpLibrary::checkData(QString data){
             clientAddress.PublicAddress = message[3]; clientAddress.PublicPort = (message[4]).toInt();
             clientAddress.LocalAddress = message[5]; clientAddress.LocalPort = (message[6]).toInt();
             threadStart();
+            //QFuture<void> future = QtConcurrent::run( this , &UdpLibrary::connect_other );
         }
         else if(message[0] == "m"){
             emit sendToUser(message);
         }
         else if(message[0] == "l" || message[0] == "g" || message[0] == "t" ){
-            if (message[1][0] == 'f')
+            if (message[1][0] == 'f'){
                 recvf = true;
+            }
             else if (message[1][0] == 'f')
                 recvt = true;
         }
