@@ -1,7 +1,6 @@
 from socket import *
-import time
 import os
-
+e_ip = "10.210.61.183"
 def test():
     csock1 = socket(AF_INET, SOCK_DGRAM)
     csock1.sendto("Hello, World!".encode('utf-8'), ('192.168.0.109',23272))
@@ -32,8 +31,8 @@ def enroll(token,id):
     csock1 = socket(AF_INET,SOCK_DGRAM)
     csock1.bind(('', 0))
     temp_str += str(csock1.getsockname()[1])+'|'
-    csock1.sendto(temp_str.encode('utf-8'), ('127.0.0.1',23272))
-#    csock1.sendto(temp_str.encode('utf-8'), ('165.194.17.3',23272))
+#    csock1.sendto(temp_str.encode('utf-8'), ('127.0.0.1',23272))
+    csock1.sendto(temp_str.encode('utf-8'), ('165.194.17.5',23272))
     print(temp_str)
     
 def enroll_test():
@@ -59,36 +58,41 @@ def enrollandlisten(token,id):
 def e():
     csock1 = socket(AF_INET, SOCK_DGRAM)
     csock1.sendto("c|222.2.2.2|12341|212.31.2.6|1231|212.31.2.6|1231|".encode('utf-8'), ('127.0.0.1',3456))
-    time.sleep(0.1)    
     i = 0
     for i  in range (1, 10):
         s()
-        time.sleep(0.001)
-        
 
-def s():
+def m():
     csock1 = socket(AF_INET, SOCK_DGRAM)
-    csock1.sendto("r|t".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|mouse|move|1|0".encode('utf-8'), (e_ip,3456))
 
 
 def ppt():
     csock1 = socket(AF_INET, SOCK_DGRAM)
-    csock1.sendto("m|ppt|start".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|ppt|next".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|ppt|start".encode('utf-8'), (e_ip,3456))
+
+def n():
+    csock1 = socket(AF_INET, SOCK_DGRAM)
+    csock1.sendto("m|ppt|next".encode('utf-8'), (e_ip,3456))
+
+def off():
+    csock1 = socket(AF_INET, SOCK_DGRAM)
+    csock1.sendto("m|pc|off".encode('utf-8'), (e_ip,3456))
+     
 
 
 def pdf():
     csock1 = socket(AF_INET, SOCK_DGRAM)
-    csock1.sendto("m|pdf|next".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|pdf|next".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|pdf|next".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|pdf|next".encode('utf-8'), (e_ip,3456))
     
 
 def v():
     csock1 = socket(AF_INET, SOCK_DGRAM)
-    csock1.sendto("m|video|start".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
-    csock1.sendto("m|video|next".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("m|video|start".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|video|next".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|video|next".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|video|next".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|video|next".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|video|next".encode('utf-8'), (e_ip,3456))
+    csock1.sendto("m|video|next".encode('utf-8'), (e_ip,3456))
