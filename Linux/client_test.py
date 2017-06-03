@@ -1,4 +1,5 @@
 from socket import *
+import time
 import os
 
 def test():
@@ -58,13 +59,16 @@ def enrollandlisten(token,id):
 def e():
     csock1 = socket(AF_INET, SOCK_DGRAM)
     csock1.sendto("c|222.2.2.2|12341|212.31.2.6|1231|212.31.2.6|1231|".encode('utf-8'), ('127.0.0.1',3456))
+    time.sleep(0.1)    
     i = 0
     for i  in range (1, 10):
         s()
+        time.sleep(0.001)
+        
 
-def m():
+def s():
     csock1 = socket(AF_INET, SOCK_DGRAM)
-    csock1.sendto("m|mouse|move|1|0".encode('utf-8'), ('127.0.0.1',3456))
+    csock1.sendto("r|t".encode('utf-8'), ('127.0.0.1',3456))
 
 
 def ppt():
