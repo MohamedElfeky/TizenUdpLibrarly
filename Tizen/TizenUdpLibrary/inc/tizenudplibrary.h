@@ -51,7 +51,7 @@ extern int tul_connect(char * token,char * id);
 
 extern int tul_enroll(char * token,char * id);
 
-extern int tul_start_listen(void (*callBack)(void *, Ecore_Thread *, void *), void * data);
+extern int tul_start_listen(Ecore_Thread_Notify_Cb callback, void * data);
 
 extern int tul_stop_listen();
 
@@ -59,8 +59,11 @@ extern int tul_init(char * server_ip,int port);
 
 extern int tul_add_listen_callback(void(* callBack)(void *, Ecore_Thread *, void *));
 
+extern int tul_get_time_id(char ** id);
+
+extern int tul_enroll(char * token,char * id);
+
 #ifdef __cplusplus
 }
 #endif
 #endif // _TIZENUDPLIBRARY_H_
-
