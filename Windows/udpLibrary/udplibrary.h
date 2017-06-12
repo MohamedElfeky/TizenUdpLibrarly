@@ -10,17 +10,17 @@
 #include <QtConcurrent/qtconcurrentrun.h>
 
 struct address{
-    QHostAddress LocalAddress =  QHostAddress::QHostAddress("127.0.0.1");
+    QHostAddress LocalAddress;
     int LocalPort = 0;
-    QHostAddress PublicAddress = QHostAddress::QHostAddress("127.0.0.1");
+    QHostAddress PublicAddress;
     int PublicPort = 0;
 };
 
 enum CONNECT{
-    LOCAL_CONNECT,
-    PUBLIC_CONNECT,
-    RELAY_CONNECT,
-    NOT_CONNECTED
+    LOCAL_CONNECT = 1,
+    PUBLIC_CONNECT = 2,
+    RELAY_CONNECT = 3,
+    NOT_CONNECTED = 4
 };
 
 class connectLibrary :public QObject
@@ -35,6 +35,8 @@ public slots:
 
 signals:
     void writeReady(char);
+    void finished();
+    void successConnection(int);
 
 };
 
@@ -47,38 +49,37 @@ public:
     UdpLibrary(QObject *parent = 0);
     ~UdpLibrary();
 
-    connectLibrary *cl;
+    static UdpLibrary* getInstance();
 
-//    QUdpSocket * udpSocket;
-    QThread * connectThread;
+
     int UdpLibrary::init(QString server, int port);
+    int bindSocket(int port);
 
     int enroll(QByteArray token, QByteArray id);
     int connects(QByteArray token, QByteArray id);
-//    void run();
 
-//    int asyncSend() ;
-    int bindSocket(int port);
-//    int listen() ;
-    static UdpLibrary* getInstance();
+
 signals:
     void sendToUser(QStringList message);
+    void connectState(bool);
+//    void started();
 
 public slots:
     void set_listen_callback();
     void checkConnect(char);
+    void checkState(int);
 
 private:
 
     void syncSend(QHostAddress address,int port, QString datagram);
 
     QThread *thread;
-    void connect_other();
+    QThread * connectThread;
+    connectLibrary *cl;
+
     void checkData(QString data);
-    void threadStart();
 
     QUdpSocket * udpSocket;
-
     QStringList message;
 };
 
