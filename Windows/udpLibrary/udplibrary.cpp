@@ -6,7 +6,7 @@ address myAddress;
 address clientAddress;
 address serverAddress;
 
-int connectState = CONNECT::NOT_CONNECTED;
+int state = CONNECT::NOT_CONNECTED;
 
 int checkIP;
 
@@ -68,19 +68,19 @@ int UdpLibrary::init(QString server, int port)
 void UdpLibrary::checkConnect(char target){
     if(target == 'l')
         if(!recvf)
-            syncSend(clientAddress.LocalAddress,clientAddress.LocalPort,"l|f");
+            send(clientAddress.LocalAddress,clientAddress.LocalPort,"l|f");
         else
-            syncSend(clientAddress.LocalAddress,clientAddress.LocalPort,"l|t");
+            send(clientAddress.LocalAddress,clientAddress.LocalPort,"l|t");
     else if(target == 'g')
         if(!recvf)
-            syncSend(clientAddress.PublicAddress,clientAddress.PublicPort,"g|f");
+            send(clientAddress.PublicAddress,clientAddress.PublicPort,"g|f");
         else
-            syncSend(clientAddress.PublicAddress,clientAddress.PublicPort,"g|t");
+            send(clientAddress.PublicAddress,clientAddress.PublicPort,"g|t");
     else
         if(!recvf)
-            syncSend(serverAddress.LocalAddress,serverAddress.LocalPort,"r|f");
+            send(serverAddress.LocalAddress,serverAddress.LocalPort,"r|f");
         else
-            syncSend(serverAddress.LocalAddress,serverAddress.LocalPort,"r|t");
+            send(serverAddress.LocalAddress,serverAddress.LocalPort,"r|t");
 }
 
 UdpLibrary * UdpLibrary::singleTonInstance= NULL;
@@ -113,12 +113,38 @@ int UdpLibrary::connects(QByteArray token, QByteArray id){
 }
 
 
-void UdpLibrary::syncSend(QHostAddress address,int port, QString datagram){
+void UdpLibrary::send(QHostAddress address,int port, QString datagram){
     udpSocket -> connectToHost(address, port, QIODevice::ReadWrite);
     udpSocket->write(datagram.toUtf8());
     //qDebug() << "mySendData : " << datagram.toUtf8() << address;
     if (datagram[0] != 'l' && datagram[0] != 'c' && datagram[0] != 'g' && datagram[0] != 'r' )
         datagram = "m|" + datagram;
+    udpSocket->disconnectFromHost();
+    this->bindSocket(myAddress.LocalPort);
+}
+
+void UdpLibrary::send(QString datagram){
+    QHostAddress address;
+    int port;
+    if(state == CONNECT::LOCAL_CONNECT){
+        address = clientAddress.LocalAddress;
+        port = clientAddress.LocalPort;
+    }
+    else if(state == CONNECT::PUBLIC_CONNECT){
+        address = clientAddress.PublicAddress;
+        port = clientAddress.PublicPort;
+    }
+    else if(state == CONNECT::RELAY_CONNECT){
+        address = serverAddress.LocalAddress;
+        port = serverAddress.LocalPort;
+    }
+    else{
+        return;
+    }
+    udpSocket -> connectToHost(address, port, QIODevice::ReadWrite);
+    udpSocket->write(datagram.toUtf8());
+    //qDebug() << "mySendData : " << datagram.toUtf8() << address;
+    datagram = "m|" + datagram;
     udpSocket->disconnectFromHost();
     this->bindSocket(myAddress.LocalPort);
 }
@@ -214,6 +240,9 @@ void connectLibrary::connect_other(){
 
     //qDebug() << "connect start";
     //qDebug() << "currentState : " << connectState;
+    recvf = false;
+    recvt = false;
+    state = CONNECT::NOT_CONNECTED;
     int i;
         for(i=0;i<20;i++){										// 로컬 연결 시도
             if(!recvf){
@@ -223,11 +252,11 @@ void connectLibrary::connect_other(){
         }
         QThread::usleep(200000);
         if(recvt && checkIP == 1){
-            connectState = CONNECT::LOCAL_CONNECT;				//현재 연결을 LOCAL 로 설정
-      //      qDebug() << "currentState : " << connectState;
+            state = CONNECT::LOCAL_CONNECT;				//현재 연결을 LOCAL 로 설정
+      //      qDebug() << "currentState : " << state;
         }
         else{
-            connectState = CONNECT::NOT_CONNECTED;					//글로벌 연결 시도
+            state = CONNECT::NOT_CONNECTED;					//글로벌 연결 시도
             recvf = false;
             for(i=0;i<20;i++){										// 로컬 연결 시도
                 if(!recvf){
@@ -237,12 +266,12 @@ void connectLibrary::connect_other(){
             }
             QThread::usleep(200000);
             if(recvt && checkIP == 2){
-                connectState = CONNECT::PUBLIC_CONNECT;
-        //        qDebug() << "currentState : " << connectState;
+                state = CONNECT::PUBLIC_CONNECT;
+        //        qDebug() << "currentState : " << state;
             }
             else{
 
-                connectState = CONNECT::NOT_CONNECTED;					//글로벌 연결 시도
+                state = CONNECT::NOT_CONNECTED;					//글로벌 연결 시도
                 recvf = false;
                 for(i=0;i<100;i++){
           //          qDebug() << "recvf : " << recvf;
@@ -254,11 +283,11 @@ void connectLibrary::connect_other(){
                 QThread::usleep(200000);
             }
             if(recvt && checkIP == 3){
-                connectState = CONNECT::RELAY_CONNECT;
-            //    qDebug() << "currentState : " << connectState;
+                state = CONNECT::RELAY_CONNECT;
+            //    qDebug() << "currentState : " << state;
             }
         }
-        //qDebug() << "currentState : " << connectState;
-        emit successConnection(connectState);
+        //qDebug() << "currentState : " << state;
+        emit successConnection(state);
         emit finished();
 }

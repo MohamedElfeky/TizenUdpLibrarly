@@ -57,6 +57,7 @@ public:
 
     int enroll(QByteArray token, QByteArray id);
     int connects(QByteArray token, QByteArray id);
+    void send(QString datagram);
 
 
 signals:
@@ -71,7 +72,7 @@ public slots:
 
 private:
 
-    void syncSend(QHostAddress address,int port, QString datagram);
+    void send(QHostAddress address,int port, QString datagram);
 
     QThread *thread;
     QThread * connectThread;
