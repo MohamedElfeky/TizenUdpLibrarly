@@ -281,7 +281,7 @@ void tul_connect_other(void *data, Ecore_Thread *thread){	//홀펀칭 및 연결
 
 
 			is_connected = TUL_NOT_CONNECTED;				//global 로 연결 시도
-			for(i=0;i<20;i++){
+			for(i=0;i<100;i++){
 				if(is_connected == TUL_NOT_CONNECTED){
 					send_packet(si_server,"r|f",3);	//연결안되면 r|f
 				}
@@ -292,6 +292,9 @@ void tul_connect_other(void *data, Ecore_Thread *thread){	//홀펀칭 및 연결
 			}
 			usleep(200000);
 		}if(is_connected==TUL_CONNECTED){
+			connected_state = TUL_CONNECTED_RELAY;
+		}else{
+			is_connected=TUL_CONNECTED;
 			connected_state = TUL_CONNECTED_RELAY;
 		}
 	}

@@ -17,6 +17,18 @@ struct user {
 
 vector<struct user> user_vector;
 
+void *  heart_beat_func(void * ){
+    while(true){
+        vector<struct user> temp_beat;
+        vector<struct user>::iterator vi;
+        temp_beat.assign( user_vector.begin(), user_vector.end() ); 
+        for(vi = temp_beat.begin();vi!=temp_beat.end();vi++){
+            udp_simple_socket::getInstance()->sendSync(vi->global,"h|");
+        }
+        sleep(10);
+    }
+}
+
 int relay_user(struct sockaddr_in sender,stringstream & ss,char relay_char){
     string message;
     message = ss.str();
@@ -89,24 +101,24 @@ int enroll_user(struct sockaddr_in& sender, stringstream & ss){
                         vector<struct user>::iterator vi;
                         struct user to_connect;//연결할놈
                         int to_connect_count=0;//연결할놈 카운트
-                        bool to_refresh = false;
+                        bool to_refresh = false, to_add_user = true;
                         for(vi = user_vector.begin();vi!=user_vector.end();){
                             bool id_cmp = vi->id.compare(id)==0;
                             bool token_cmp = vi->token.compare(token)==0;
                             if(id_cmp){
                                 if(token_cmp){
                                     //TODO ip 비교하고 다르면 연결 refresh
-                                    cout<<"같은놈인디 아이피 비교해봐야겠구먼"<<endl;
                                     if(sender.sin_addr.s_addr != vi->global.sin_addr.s_addr||sender.sin_port!=vi->global.sin_port){
-                                        cout<<"아이피를 비교했더니 어이쿠 아이피나 포트가 달라졌네"<<endl;
+                                        cout<<"user ip updated"<<endl;
                                         vi = user_vector.erase(vi); //현재 아이피 지우기
                                         to_refresh = true;
                                         continue;
                                     }else{
+                                        to_add_user = false;
                                     }
                                 }else{
                                     //TODO 연결 해제하고 새로운 토큰에 연결하기
-                                    cout<<token<<"과 연결을 해제합니다"<<endl;
+                                    cout<<token<<"disconnect and connect to new"<<endl;
                                     vi = user_vector.erase(vi); //현재 아이피 지우기
                                     to_refresh = true;
                                     continue;
@@ -118,8 +130,10 @@ int enroll_user(struct sockaddr_in& sender, stringstream & ss){
                                         to_connect = *vi;
                                         to_connect_count ++;
                                         to_refresh = true;
+                                        cout<<token<<"find one to connect"<<endl;
                                     }else{
                                         //TODO 여기서 return 해주고 해당 토큰이 busy하다고 알려줘야함
+                                        cout<<token<<"this token is busy"<<endl;
                                         return 0;
                                     }
                                 }
@@ -138,7 +152,7 @@ int enroll_user(struct sockaddr_in& sender, stringstream & ss){
                         temp_user.id = id;
                         temp_user.global = sender;
                         temp_user.local = temp_addr;
-                        user_vector.push_back(temp_user);
+                        if(to_add_user) user_vector.push_back(temp_user);
                         if(to_refresh&&to_connect_count==1)connect_two_user(temp_user,to_connect);
                     }else{
                         cout<< "ip fail"<<endl;
@@ -167,10 +181,12 @@ int my_listen_callback(struct sockaddr_in sender, const std::string& msg){
 }
 int main(void)
 {   
+    pthread_t heart_beat;
     udp_simple_socket * socket =udp_simple_socket::getInstance();
     socket -> bind_port(23272);
     socket -> listen();
     socket -> set_listen_callback_func(my_listen_callback);
+    pthread_create(&heart_beat, NULL, heart_beat_func, NULL);
     while(1){
         sleep(1);
     }

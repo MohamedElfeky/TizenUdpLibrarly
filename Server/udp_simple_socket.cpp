@@ -94,7 +94,7 @@ bool udp_simple_socket::sendSync(std::string message) const
     struct two_arg_struct socket_and_message;
     socket_and_message.arg1 = (void *)this;
     socket_and_message.arg2 = (void *)&message;
-    printf("Before Thread\n"); 
+    // printf("Before Thread\n"); 
     thr_id = pthread_create(&p_thread, NULL, udp_simple_socket::startSend, (void *)&socket_and_message);
     if (thr_id < 0)
     {
