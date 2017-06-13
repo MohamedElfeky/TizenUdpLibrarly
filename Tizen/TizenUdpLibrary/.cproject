@@ -20,13 +20,13 @@
 						<toolChain id="org.tizen.nativecore.toolchain.sbi.gcc45.lib.debug.980227561" name="Tizen Native Toolchain" superClass="org.tizen.nativecore.toolchain.sbi.gcc45.lib.debug">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF" id="org.tizen.nativeide.target.sbi.gnu.platform.base.1930874029" osList="linux,win32" superClass="org.tizen.nativeide.target.sbi.gnu.platform.base"/>
 							<builder autoBuildTarget="all" buildPath="${workspace_loc:/TizenUdpLibrary}/Debug" enableAutoBuild="true" id="org.tizen.nativecore.target.sbi.gnu.builder.166822998" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Tizen Application Builder" superClass="org.tizen.nativecore.target.sbi.gnu.builder"/>
-							<tool command="i386-linux-gnueabi-ar.exe" id="org.tizen.nativecore.tool.sbi.gnu.archiver.468903914" name="Archiver" superClass="org.tizen.nativecore.tool.sbi.gnu.archiver"/>
+							<tool command="arm-linux-gnueabi-ar.exe" id="org.tizen.nativecore.tool.sbi.gnu.archiver.468903914" name="Archiver" superClass="org.tizen.nativecore.tool.sbi.gnu.archiver"/>
 							<tool command="clang++.exe" id="org.tizen.nativecore.tool.sbi.gnu.cpp.compiler.51524042" name="C++ Compiler" superClass="org.tizen.nativecore.tool.sbi.gnu.cpp.compiler">
 								<option id="gnu.cpp.compiler.option.optimization.level.1416947922" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option defaultValue="gnu.cpp.compiler.debugging.level.max" id="sbi.gnu.cpp.compiler.option.debugging.level.core.1666540110" name="Debug level" superClass="sbi.gnu.cpp.compiler.option.debugging.level.core" valueType="enumerated"/>
 								<option defaultValue="false" id="sbi.gnu.cpp.compiler.option.misc.pic.core.1670978807" name="-fPIC option" superClass="sbi.gnu.cpp.compiler.option.misc.pic.core" valueType="boolean"/>
 								<option id="sbi.gnu.cpp.compiler.option.1495855728" name="Tizen-Target" superClass="sbi.gnu.cpp.compiler.option" valueType="userObjs">
-									<listOptionValue builtIn="false" value="wearable-2.3.2-emulator.core_llvm37.i386.core.staticLib"/>
+									<listOptionValue builtIn="false" value="wearable-2.3.2-device.core_llvm37.armel.core.staticLib"/>
 								</option>
 								<option id="sbi.gnu.cpp.compiler.option.frameworks_inc.core.356911755" name="Tizen-Frameworks-Include-Path" superClass="sbi.gnu.cpp.compiler.option.frameworks_inc.core" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${SBI_SYSROOT}/usr/include/libxml2&quot;"/>
@@ -85,6 +85,7 @@
 									<listOptionValue builtIn="false" value="${TC_COMPILER_MISC}"/>
 									<listOptionValue builtIn="false" value="${RS_COMPILER_MISC}"/>
 									<listOptionValue builtIn="false" value="--sysroot=&quot;${SBI_SYSROOT}&quot;"/>
+									<listOptionValue builtIn="false" value="-mthumb"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.include.paths.740591804" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/inc}&quot;"/>
@@ -99,7 +100,7 @@
 								<option defaultValue="gnu.c.debugging.level.max" id="sbi.gnu.c.compiler.option.debugging.level.core.1141308210" name="Debug level" superClass="sbi.gnu.c.compiler.option.debugging.level.core" valueType="enumerated"/>
 								<option defaultValue="false" id="sbi.gnu.c.compiler.option.misc.pic.core.529014357" name="-fPIC option" superClass="sbi.gnu.c.compiler.option.misc.pic.core" valueType="boolean"/>
 								<option id="sbi.gnu.c.compiler.option.1989356355" name="Tizen-Target" superClass="sbi.gnu.c.compiler.option" valueType="userObjs">
-									<listOptionValue builtIn="false" value="wearable-2.3.2-emulator.core_llvm37.i386.core.staticLib"/>
+									<listOptionValue builtIn="false" value="wearable-2.3.2-device.core_llvm37.armel.core.staticLib"/>
 								</option>
 								<option id="sbi.gnu.c.compiler.option.frameworks_inc.core.714064946" name="Tizen-Frameworks-Include-Path" superClass="sbi.gnu.c.compiler.option.frameworks_inc.core" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${SBI_SYSROOT}/usr/include/libxml2&quot;"/>
@@ -158,6 +159,7 @@
 									<listOptionValue builtIn="false" value="${TC_COMPILER_MISC}"/>
 									<listOptionValue builtIn="false" value="${RS_COMPILER_MISC}"/>
 									<listOptionValue builtIn="false" value="--sysroot=&quot;${SBI_SYSROOT}&quot;"/>
+									<listOptionValue builtIn="false" value="-mthumb"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.paths.1272953867" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/inc}&quot;"/>
@@ -182,7 +184,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib}&quot;"/>
 								</option>
 							</tool>
-							<tool command="i386-linux-gnueabi-as.exe" id="org.tizen.nativeapp.tool.sbi.gnu.assembler.base.145526209" name="Assembler" superClass="org.tizen.nativeapp.tool.sbi.gnu.assembler.base">
+							<tool command="arm-linux-gnueabi-as.exe" id="org.tizen.nativeapp.tool.sbi.gnu.assembler.base.145526209" name="Assembler" superClass="org.tizen.nativeapp.tool.sbi.gnu.assembler.base">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.154078994" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 							<tool id="org.tizen.nativecore.tool.fnmapgen.795709131" name="C FN-Map Generator" superClass="org.tizen.nativecore.tool.fnmapgen"/>
@@ -228,10 +230,10 @@
 								<option id="gnu.cpp.compiler.option.optimization.level.13996497" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
 								<option defaultValue="gnu.cpp.compiler.debugging.level.none" id="sbi.gnu.cpp.compiler.option.debugging.level.core.1040315307" name="Debug level" superClass="sbi.gnu.cpp.compiler.option.debugging.level.core" valueType="enumerated"/>
 								<option defaultValue="false" id="sbi.gnu.cpp.compiler.option.misc.pic.core.738130866" name="-fPIC option" superClass="sbi.gnu.cpp.compiler.option.misc.pic.core" valueType="boolean"/>
-								<option id="sbi.gnu.cpp.compiler.option.801365583" superClass="sbi.gnu.cpp.compiler.option" valueType="userObjs">
+								<option id="sbi.gnu.cpp.compiler.option.801365583" name="Tizen-Target" superClass="sbi.gnu.cpp.compiler.option" valueType="userObjs">
 									<listOptionValue builtIn="false" value="wearable-2.3.2-emulator.core_llvm37.i386.core.app"/>
 								</option>
-								<option id="sbi.gnu.cpp.compiler.option.frameworks_inc.core.394105838" superClass="sbi.gnu.cpp.compiler.option.frameworks_inc.core" valueType="includePath">
+								<option id="sbi.gnu.cpp.compiler.option.frameworks_inc.core.394105838" name="Tizen-Frameworks-Include-Path" superClass="sbi.gnu.cpp.compiler.option.frameworks_inc.core" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${SBI_SYSROOT}/usr/include/libxml2&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${SBI_SYSROOT}/usr/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${SBI_SYSROOT}/usr/include/appcore-agent&quot;"/>
@@ -284,15 +286,15 @@
 									<listOptionValue builtIn="false" value="&quot;${SBI_SYSROOT}/usr/lib/dbus-1.0/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${SBI_SYSROOT}/usr/lib/glib-2.0/include&quot;"/>
 								</option>
-								<option id="sbi.gnu.cpp.compiler.option.frameworks_cflags.core.1999956078" superClass="sbi.gnu.cpp.compiler.option.frameworks_cflags.core" valueType="stringList">
+								<option id="sbi.gnu.cpp.compiler.option.frameworks_cflags.core.1999956078" name="Tizen-Frameworks-Other-Cflags" superClass="sbi.gnu.cpp.compiler.option.frameworks_cflags.core" valueType="stringList">
 									<listOptionValue builtIn="false" value="${TC_COMPILER_MISC}"/>
 									<listOptionValue builtIn="false" value="${RS_COMPILER_MISC}"/>
 									<listOptionValue builtIn="false" value="--sysroot=&quot;${SBI_SYSROOT}&quot;"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.include.paths.1336238067" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+								<option id="gnu.cpp.compiler.option.include.paths.1336238067" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/inc}&quot;"/>
 								</option>
-								<option id="sbi.gnu.cpp.compiler.option.frameworks.core.846850225" superClass="sbi.gnu.cpp.compiler.option.frameworks.core" valueType="userObjs">
+								<option id="sbi.gnu.cpp.compiler.option.frameworks.core.846850225" name="Tizen-Frameworks" superClass="sbi.gnu.cpp.compiler.option.frameworks.core" valueType="userObjs">
 									<listOptionValue builtIn="false" value="Native_API"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.2061971952" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
@@ -301,10 +303,10 @@
 								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.option.optimization.level.1338598956" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" valueType="enumerated"/>
 								<option defaultValue="gnu.c.debugging.level.default" id="sbi.gnu.c.compiler.option.debugging.level.core.2086403824" name="Debug level" superClass="sbi.gnu.c.compiler.option.debugging.level.core" valueType="enumerated"/>
 								<option defaultValue="false" id="sbi.gnu.c.compiler.option.misc.pic.core.1611307960" name="-fPIC option" superClass="sbi.gnu.c.compiler.option.misc.pic.core" valueType="boolean"/>
-								<option id="sbi.gnu.c.compiler.option.549028304" superClass="sbi.gnu.c.compiler.option" valueType="userObjs">
+								<option id="sbi.gnu.c.compiler.option.549028304" name="Tizen-Target" superClass="sbi.gnu.c.compiler.option" valueType="userObjs">
 									<listOptionValue builtIn="false" value="wearable-2.3.2-emulator.core_llvm37.i386.core.app"/>
 								</option>
-								<option id="sbi.gnu.c.compiler.option.frameworks_inc.core.223444572" superClass="sbi.gnu.c.compiler.option.frameworks_inc.core" valueType="includePath">
+								<option id="sbi.gnu.c.compiler.option.frameworks_inc.core.223444572" name="Tizen-Frameworks-Include-Path" superClass="sbi.gnu.c.compiler.option.frameworks_inc.core" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${SBI_SYSROOT}/usr/include/libxml2&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${SBI_SYSROOT}/usr/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${SBI_SYSROOT}/usr/include/appcore-agent&quot;"/>
@@ -357,15 +359,15 @@
 									<listOptionValue builtIn="false" value="&quot;${SBI_SYSROOT}/usr/lib/dbus-1.0/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${SBI_SYSROOT}/usr/lib/glib-2.0/include&quot;"/>
 								</option>
-								<option id="sbi.gnu.c.compiler.option.frameworks_cflags.core.327342870" superClass="sbi.gnu.c.compiler.option.frameworks_cflags.core" valueType="stringList">
+								<option id="sbi.gnu.c.compiler.option.frameworks_cflags.core.327342870" name="Tizen-Frameworks-Other-Cflags" superClass="sbi.gnu.c.compiler.option.frameworks_cflags.core" valueType="stringList">
 									<listOptionValue builtIn="false" value="${TC_COMPILER_MISC}"/>
 									<listOptionValue builtIn="false" value="${RS_COMPILER_MISC}"/>
 									<listOptionValue builtIn="false" value="--sysroot=&quot;${SBI_SYSROOT}&quot;"/>
 								</option>
-								<option id="gnu.c.compiler.option.include.paths.632681365" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+								<option id="gnu.c.compiler.option.include.paths.632681365" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/inc}&quot;"/>
 								</option>
-								<option id="sbi.gnu.c.compiler.option.frameworks.core.1361291730" superClass="sbi.gnu.c.compiler.option.frameworks.core" valueType="userObjs">
+								<option id="sbi.gnu.c.compiler.option.frameworks.core.1361291730" name="Tizen-Frameworks" superClass="sbi.gnu.c.compiler.option.frameworks.core" valueType="userObjs">
 									<listOptionValue builtIn="false" value="Native_API"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.21999901" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
@@ -374,14 +376,14 @@
 							<tool command="clang++.exe" id="org.tizen.nativecore.tool.sbi.gnu.cpp.linker.1483316902" name="C++ Linker" superClass="org.tizen.nativecore.tool.sbi.gnu.cpp.linker">
 								<option defaultValue="false" id="sbi.gnu.cpp.linker.option.shared_flag.core.949762329" name="Linker.Shared" superClass="sbi.gnu.cpp.linker.option.shared_flag.core" valueType="boolean"/>
 								<option defaultValue="false" id="sbi.gnu.cpp.linker.option.noundefined.core.1249525224" name="Report unresolved symbol references (-Wl,--no-undefined)" superClass="sbi.gnu.cpp.linker.option.noundefined.core" valueType="boolean"/>
-								<option id="sbi.gnu.cpp.linker.option.frameworks_lflags.core.517478452" superClass="sbi.gnu.cpp.linker.option.frameworks_lflags.core" valueType="stringList">
+								<option id="sbi.gnu.cpp.linker.option.frameworks_lflags.core.517478452" name="Tizen-Frameworks-Other-Lflags" superClass="sbi.gnu.cpp.linker.option.frameworks_lflags.core" valueType="stringList">
 									<listOptionValue builtIn="false" value="${TC_LINKER_MISC}"/>
 									<listOptionValue builtIn="false" value="${RS_LINKER_MISC}"/>
 									<listOptionValue builtIn="false" value="--sysroot=&quot;${SBI_SYSROOT}&quot;"/>
 									<listOptionValue builtIn="false" value="-L&quot;${SBI_SYSROOT}/usr/lib&quot;"/>
 									<listOptionValue builtIn="false" value="$(RS_LIBRARIES)"/>
 								</option>
-								<option id="gnu.cpp.link.option.paths.1640090219" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+								<option id="gnu.cpp.link.option.paths.1640090219" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib}&quot;"/>
 								</option>
 							</tool>
