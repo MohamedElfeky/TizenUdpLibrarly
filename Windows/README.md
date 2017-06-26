@@ -92,7 +92,7 @@ private slots:
   void checkConnect(bool){
   }
 QObject::connect(UDP,SIGNAL(connectState(bool)),this,SLOT(checkConnect(bool)));
-
+```
 
 #### 사용 예제
 
