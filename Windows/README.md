@@ -98,18 +98,18 @@ QObject::connect(UDP,SIGNAL(connectState(bool)),this,SLOT(checkConnect(bool)));
 
 해당 라이브러리 함수는 다음과 같은 방법으로 사용합니다.
 socket 사용시 순서가 변경되면 문제가 생길 수 있으니 다음과 같은 절차를 지켜주세요.
+
 ```cpp
+UDPLibrary *UDP;  // 라이브러리 사용을 위한 변수선언. header file private으로 선언추천
 
-  UDPLibrary *UDP;  // 라이브러리 사용을 위한 변수선언. header file private으로 선언추천
+// 다음 부분들은 시그널-슬롯 연결을 위해 어플리케이션(mainwindow나 dialog, widget 등) 생성자에 선언해주세요.
+UDP= UdpLibrary::getInstance();
+QObject::connect(UDP,SIGNAL(sendToUser(QStringList)),this,SLOT(receiveMessage(QStringList)));
+QObject::connect(UDP,SIGNAL(connectState(bool)),this,SLOT(checkConnect(bool)));
 
-  // 다음 부분들은 시그널-슬롯 연결을 위해 어플리케이션(mainwindow나 dialog, widget 등) 생성자에 선언해주세요.
-  UDP= UdpLibrary::getInstance();
-  QObject::connect(UDP,SIGNAL(sendToUser(QStringList)),this,SLOT(receiveMessage(QStringList)));
-  QObject::connect(UDP,SIGNAL(connectState(bool)),this,SLOT(checkConnect(bool)));
-
-  // server와 연결하고싶은부분에 적용해주세요. (ex. button event, app constructor)
-   UDP->init("222.108.245.162", 23272);
-   UDP->bindSocket(3456);
-   UDP->enroll(token,id); // token을 알아야 연결가능
+// server와 연결하고싶은부분에 적용해주세요. (ex. button event, app constructor)
+UDP->init("222.108.245.162", 23272);
+UDP->bindSocket(3456);
+UDP->enroll(token,id); // token을 알아야 연결가능
 
 ```
