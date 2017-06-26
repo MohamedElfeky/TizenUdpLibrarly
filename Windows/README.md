@@ -97,9 +97,11 @@ QObject::connect(UDP,SIGNAL(connectState(bool)),this,SLOT(checkConnect(bool)));
 #### 사용 예제
 
 > 해당 라이브러리 함수는 다음과 같은 방법으로 사용합니다.
+>
 > socket 사용시 순서가 변경되면 문제가 생길 수 있으니 다음과 같은 절차를 지켜주세요.
 
 > 메세지를 받은 후 처리하기 위해서는 receiveMessage 함수 정의가 필요합니다.
+>
 > connect 상태를 확인하고 싶다면 checkConnect 함수를 정의해주세요.
 
 > enroll() 대신 connect()함수 사용하여도 됩니다.
